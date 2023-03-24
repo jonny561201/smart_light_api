@@ -1,5 +1,8 @@
 import tinytuya
 
+from svc.config.settings_state import Settings
+from svc.utils import file_utils
+
 
 def update_light_state(data):
     light_id = data.get('lightId')
@@ -10,3 +13,11 @@ def update_light_state(data):
     else:
         test.turn_on()
         test.set_value(2, brightness * 10)
+
+
+def get_light_groups():
+    settings = Settings.get_instance()
+    content = file_utils.get_json_file(settings.light_file)
+    if not content:
+        return file_utils.save_json_file(settings.light_file)
+    return content

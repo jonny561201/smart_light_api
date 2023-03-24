@@ -27,12 +27,12 @@ class TestLightServices:
 
         get_light_groups()
 
-        file_mock.save_json_file.assert_called_with(file_name)
+        file_mock.create_json_file.assert_called_with(file_name)
 
     def test_get_light_groups__should_return_default_file_contents(self, file_mock):
         test_file = [{'contents': 'im fake!'}]
         file_mock.get_json_file.return_value = None
-        file_mock.save_json_file.return_value = test_file
+        file_mock.create_json_file.return_value = test_file
 
         actual = get_light_groups()
 

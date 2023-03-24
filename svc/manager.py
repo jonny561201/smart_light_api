@@ -1,6 +1,6 @@
 from flask import Flask
 
-from svc.routes.lights import LIGHT_BLUEPRINT
+from svc.routes.light_routes import LIGHT_BLUEPRINT
 
 
 app = Flask(__name__)

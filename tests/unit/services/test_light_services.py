@@ -4,7 +4,7 @@ from svc.config.settings_state import Settings
 from svc.services.light_service import get_light_groups, set_light_group
 
 
-@patch('svc.services.light_service.file_utils')
+@patch('svc.services.light_service.FileUtil')
 class TestLightServices:
     SETTINGS = None
     FILE_CONTENTS = [{}]

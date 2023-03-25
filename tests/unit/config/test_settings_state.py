@@ -16,7 +16,6 @@ class TestSettingsState:
 
     def test_settings_state__should_return_light_file_from_file(self):
         test_file = 'test.json'
-        self.SETTINGS.dev_mode = True
         self.SETTINGS.settings = {'lightFile': test_file}
 
         actual = self.SETTINGS.light_file

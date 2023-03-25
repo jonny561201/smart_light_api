@@ -21,3 +21,8 @@ def get_light_groups():
     if not content:
         return file_utils.create_json_file(settings.light_file)
     return content
+
+
+def set_light_group(request):
+    settings = Settings.get_instance()
+    file_utils.get_json_file(settings.light_file)

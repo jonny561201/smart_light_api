@@ -1,6 +1,8 @@
 import json
 import os
 
+from werkzeug.exceptions import NotFound
+
 from config.file_template import template
 from config.settings_state import Settings
 
@@ -17,7 +19,10 @@ class FileUtil:
             FileUtil.__instance.__get_content()
 
     def get_all_light_groups(self):
-        return self.content['registered']
+        registered_groups = self.content.get('registered')
+        if registered_groups:
+            return registered_groups
+        raise NotFound()
 
     def get_group_by_id(self, group_id):
         registered_groups = self.content['registered']

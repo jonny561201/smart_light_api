@@ -1,4 +1,7 @@
+import pytest
+
 from svc.utils.file_utils import FileUtil
+from werkzeug.exceptions import NotFound
 
 
 class TestFileUtil:
@@ -17,6 +20,12 @@ class TestFileUtil:
         actual = self.UTIL.get_all_light_groups()
 
         assert actual == [self.GROUP_TWO]
+
+    def test_get_all_light_groups__should_raise_exception_when_no_registered_groups(self):
+        self.UTIL.content = {'unregistered': []}
+
+        with pytest.raises(NotFound):
+            self.UTIL.get_all_light_groups()
 
     def test_get_group_by_id__should_return_matching_list(self):
         groups = [self.GROUP_ONE, self.GROUP_TWO, self.GROUP_THREE]

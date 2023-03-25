@@ -29,6 +29,7 @@ class FileUtil:
         for group in registered_groups:
             if group['groupId'] == group_id:
                 return group
+        raise NotFound()
 
     @staticmethod
     def __create_light_file(file_name):

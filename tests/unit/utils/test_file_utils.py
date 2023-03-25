@@ -34,3 +34,9 @@ class TestFileUtil:
         actual = self.UTIL.get_group_by_id(2)
 
         assert actual == self.GROUP_TWO
+
+    def test_get_group_by_id__should_raise_exception_when_no_matching_group(self):
+        self.UTIL.content = {'registered': [self.GROUP_ONE]}
+
+        with pytest.raises(NotFound):
+            self.UTIL.get_group_by_id(2)

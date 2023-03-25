@@ -15,24 +15,15 @@ class TestLightServices:
         self.SETTINGS.dev_mode = True
 
     def test_get_light_groups__should_return_content_from_file(self, file_mock):
-        file_mock.get_json_file.return_value = self.FILE_CONTENTS
+        file_mock.get_instance.return_value.get_all_light_groups.return_value = self.FILE_CONTENTS
 
         actual = get_light_groups()
 
         assert actual == self.FILE_CONTENTS
 
-    def test_get_light_groups__should_save_file_when_does_not_exist(self, file_mock):
-        self.SETTINGS.settings = {'lightFile': self.FILE_NAME}
-        file_mock.get_json_file.return_value = None
-
-        get_light_groups()
-
-        file_mock.create_json_file.assert_called_with(self.FILE_NAME)
-
-    def test_get_light_groups__should_return_default_file_contents(self, file_mock):
+    def test_get_light_groups__should_return_contents(self, file_mock):
         test_file = [{'contents': 'im fake!'}]
-        file_mock.get_json_file.return_value = None
-        file_mock.create_json_file.return_value = test_file
+        file_mock.get_instance.return_value.get_all_light_groups.return_value = test_file
 
         actual = get_light_groups()
 
@@ -43,4 +34,4 @@ class TestLightServices:
         self.SETTINGS.settings = {'lightFile': self.FILE_NAME}
         set_light_group(request)
 
-        mock_file.get_json_file.assert_called_with(self.FILE_NAME)
+        mock_file.get_all_light_groups.assert_called_with(self.FILE_NAME)

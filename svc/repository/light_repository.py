@@ -1,7 +1,8 @@
 from sqlalchemy import orm, create_engine
-from svc.constants.settings_state import Settings
-from svc.db.models.user_information_model import UserCredentials
 from werkzeug.exceptions import Unauthorized
+
+from svc.config.settings_state import Settings
+from svc.repository.models.lights import Devices
 
 
 class UserDatabaseManager:
@@ -15,7 +16,7 @@ class UserDatabaseManager:
         session = orm.sessionmaker(bind=db_engine)
         self.db_session = orm.scoped_session(session)
 
-        return UserDatabase(self.db_session)
+        return LightDatabase(self.db_session)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.db_session.commit()
@@ -27,10 +28,6 @@ class LightDatabase:
         self.session = session
 
     def get_user_info(self, user_id):
-        user = self.session.query(UserCredentials).filter_by(user_id=user_id).first()
+        user = self.session.query(Devices).filter_by(user_id=user_id).first()
         if user is None:
             raise Unauthorized
-        return {'user_id': user.user_id,
-                'roles': [self.__create_role(role.role_devices, role.role.role_name) for role in user.user_roles],
-                'first_name': user.user.first_name,
-                'last_name': user.user.last_name}

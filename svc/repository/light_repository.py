@@ -26,6 +26,6 @@ class LightDatabase:
     def __init__(self, session):
         self.session = session
 
-    def get_light_groups(self, user_id):
+    def get_light_groups(self):
         return self.session.query(DeviceGroups).all()
 

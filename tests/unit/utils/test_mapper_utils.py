@@ -14,5 +14,5 @@ class TestMapperUtils:
         groups = [self.GROUP]
         actual = map_light_groups(groups)
 
-        expected = [{'name': 'Bedroom', 'id': self.GROUP_ID, 'lights': [{'name': 'Night Stand', 'id': self.DEVICE_ID, }]}]
+        expected = [{'groupName': 'Bedroom', 'groupId': self.GROUP_ID, 'lights': [{'lightName': 'Night Stand', 'lightId': self.DEVICE_ID, }]}]
         assert actual == expected

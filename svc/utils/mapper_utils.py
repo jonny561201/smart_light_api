@@ -3,13 +3,21 @@ def map_light_groups(groups):
 
 def __map_group(group):
     return {
-        'name': group.name,
-        'id': group.id,
+        'groupName': group.name,
+        'groupId': group.id,
         'lights': [__map_light(light) for light in group.devices]
     }
 
 def __map_light(light):
     return {
-        'name': light.name,
-        'id': light.id
+        'lightName': light.name,
+        'lightId': light.id
     }
+
+# [
+#     { groupId: 1, groupName: 'Living Room', brightness: 100, on: true, lights: [
+#         { brightness: 80, lightName: 'lamp', lightId: 2, groupId: 1, on: true },
+#         { brightness: 10, lightName: 'desk', lightId: 3, groupId: 1, on: true },
+#     ]
+#       }
+# ],

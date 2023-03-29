@@ -1,11 +1,10 @@
 from sqlalchemy import orm, create_engine
-from werkzeug.exceptions import Unauthorized
 
 from svc.config.settings_state import Settings
-from svc.repository.models.lights import Devices
+from svc.repository.models.lights import DeviceGroups
 
 
-class UserDatabaseManager:
+class LightDatabaseManager:
     db_session = None
 
     def __enter__(self):
@@ -27,7 +26,6 @@ class LightDatabase:
     def __init__(self, session):
         self.session = session
 
-    def get_user_info(self, user_id):
-        user = self.session.query(Devices).filter_by(user_id=user_id).first()
-        if user is None:
-            raise Unauthorized
+    def get_light_groups(self, user_id):
+        return self.session.query(DeviceGroups).all()
+

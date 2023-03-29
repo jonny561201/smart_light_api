@@ -26,6 +26,10 @@ class Settings:
     def db_port(self):
         return self.settings.get('dbPort') if self.dev_mode else os.environ.get('DB_PORT')
 
+    @property
+    def db_user(self):
+        return self.settings.get('dbUser') if self.dev_mode else os.environ.get('DB_USER')
+
     @staticmethod
     def get_instance():
         if Settings.__instance is None:

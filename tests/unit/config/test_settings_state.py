@@ -8,17 +8,20 @@ class TestSettingsState:
     ENV_LIGHT_FILE = 'other.json'
     ENV_DB_NAME = 'test-db'
     ENV_DB_PORT = '3322'
+    ENV_DB_USER = 'OtherUserName'
 
     def setup_method(self):
         self.SETTINGS = Settings.get_instance()
         os.environ.update({'LIGHT_FILE': self.ENV_LIGHT_FILE,
                            'DB_NAME': self.ENV_DB_NAME,
-                           'DB_PORT': self.ENV_DB_PORT})
+                           'DB_PORT': self.ENV_DB_PORT,
+                           'DB_USER': self.ENV_DB_USER})
 
     def teardown_method(self):
         os.environ.pop('LIGHT_FILE')
         os.environ.pop('DB_NAME')
         os.environ.pop('DB_PORT')
+        os.environ.pop('DB_USER')
 
     def test_settings_state__should_return_light_file_from_file(self):
         test_file = 'test.json'
@@ -67,3 +70,19 @@ class TestSettingsState:
         actual = self.SETTINGS.db_port
 
         assert actual == self.ENV_DB_PORT
+
+    def test_settings_state__should_return_db_user_from_file(self):
+        db_user = 'testUserName'
+        self.SETTINGS.dev_mode = True
+        self.SETTINGS.settings = {'dbUser': db_user}
+
+        actual = self.SETTINGS.db_user
+
+        assert actual == db_user
+
+    def test_settings_state__should_return_db_user_from_env_vars(self):
+        self.SETTINGS.dev_mode = False
+
+        actual = self.SETTINGS.db_user
+
+        assert actual == self.ENV_DB_USER

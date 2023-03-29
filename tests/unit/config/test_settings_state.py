@@ -7,17 +7,22 @@ class TestSettingsState:
     SETTINGS = None
     ENV_LIGHT_FILE = 'other.json'
     ENV_DB_NAME = 'test-db'
+    ENV_DB_PORT = '3322'
 
     def setup_method(self):
         self.SETTINGS = Settings.get_instance()
-        os.environ.update({'LIGHT_FILE': self.ENV_LIGHT_FILE, 'DB_NAME': self.ENV_DB_NAME})
+        os.environ.update({'LIGHT_FILE': self.ENV_LIGHT_FILE,
+                           'DB_NAME': self.ENV_DB_NAME,
+                           'DB_PORT': self.ENV_DB_PORT})
 
     def teardown_method(self):
         os.environ.pop('LIGHT_FILE')
         os.environ.pop('DB_NAME')
+        os.environ.pop('DB_PORT')
 
     def test_settings_state__should_return_light_file_from_file(self):
         test_file = 'test.json'
+        self.SETTINGS.dev_mode = True
         self.SETTINGS.settings = {'lightFile': test_file}
 
         actual = self.SETTINGS.light_file
@@ -33,6 +38,7 @@ class TestSettingsState:
 
     def test_settings_state__should_return_db_name_from_file(self):
         db_name = 'fake db'
+        self.SETTINGS.dev_mode = True
         self.SETTINGS.settings = {'dbName': db_name}
 
         actual = self.SETTINGS.db_name
@@ -45,3 +51,19 @@ class TestSettingsState:
         actual = self.SETTINGS.db_name
 
         assert actual == self.ENV_DB_NAME
+
+    def test_settings_state__should_return_db_port_from_file(self):
+        db_port = 4433
+        self.SETTINGS.dev_mode = True
+        self.SETTINGS.settings = {'dbPort': db_port}
+
+        actual = self.SETTINGS.db_port
+
+        assert actual == db_port
+
+    def test_settings_state__should_return_db_port_from_env_vars(self):
+        self.SETTINGS.dev_mode = False
+
+        actual = self.SETTINGS.db_port
+
+        assert actual == self.ENV_DB_PORT

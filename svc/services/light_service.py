@@ -1,6 +1,6 @@
 from svc.config.settings_state import Settings
-from utils.file_utils import FileUtil
-from utils.tuya_utils import set_switch_brightness
+from svc.utils.file_utils import FileUtil
+from svc.utils.tuya_utils import set_switch_brightness
 
 
 def update_light_state(data):

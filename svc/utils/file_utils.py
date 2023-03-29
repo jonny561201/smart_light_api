@@ -3,8 +3,8 @@ import os
 
 from werkzeug.exceptions import NotFound
 
-from config.file_template import template
-from config.settings_state import Settings
+from svc.config.file_template import template
+from svc.config.settings_state import Settings
 
 
 class FileUtil:

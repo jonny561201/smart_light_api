@@ -45,6 +45,6 @@ class Settings:
             file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'settings.json')
             with open(file_path, "r") as reader:
                 self.settings = json.loads(reader.read())
-                self.dev_mode = self.settings.get("environment", False)
+                self.dev_mode = self.settings.get("development", False)
         except Exception:
             self.settings = {}

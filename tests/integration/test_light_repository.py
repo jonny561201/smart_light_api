@@ -24,5 +24,8 @@ class TestDbIntegration:
     def test_get_light_groups__should_return_records_from_database(self):
         with LightDatabaseManager() as db:
             actual = db.get_light_groups()
-            print(actual)
 
+            assert str(actual[0].id) == self.GROUP_ID
+            assert actual[0].name =='Bedroom'
+            assert len(actual[0].devices) == 1
+            assert actual[0].devices[0].name == 'Desk Lamp'

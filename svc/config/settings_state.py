@@ -20,7 +20,7 @@ class Settings:
 
     @property
     def db_name(self):
-        return self.settings.get('dbName')
+        return self.settings.get('dbName') if self.dev_mode else os.environ.get('DB_NAME')
 
     @staticmethod
     def get_instance():

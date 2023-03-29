@@ -28,3 +28,11 @@ class TestSettingsState:
         actual = self.SETTINGS.light_file
 
         assert actual == self.ENV_LIGHT_FILE
+
+    def test_settings_state__should_return_db_name_from_file(self):
+        db_name = 'fake db'
+        self.SETTINGS.settings = {'dbName': db_name}
+
+        actual = self.SETTINGS.db_name
+
+        assert actual == db_name

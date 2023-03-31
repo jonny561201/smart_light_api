@@ -1,17 +1,13 @@
-def map_light_groups(groups):
-    return [__map_group(group) for group in groups]
+from svc.config.tuya_constants import DeviceStates
 
-def __map_group(group):
-    return {
-        'groupName': group.name,
-        'groupId': group.id,
-        'lights': [__map_light(light) for light in group.devices]
-    }
 
-def __map_light(light):
+def map_light(light, status):
     return {
         'lightName': light.name,
-        'lightId': light.id
+        'lightId': str(light.id),
+        'groupId': str(light.group_id),
+        'on': status.get(DeviceStates.ON),
+        'brightness': status.get(DeviceStates.BRIGHTNESS)
     }
 
 # [

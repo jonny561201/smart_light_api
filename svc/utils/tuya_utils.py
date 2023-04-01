@@ -38,4 +38,4 @@ def get_light_status(light):
 
 
 # device = Devices(name='test', ip_address='192.168.1.220', device_id='eb7e9698b75d2318f0hgsa', local_key='cf9b14ab2a5af47b')
-# set_switch_brightness(device, 50)
+# set_switch_brightness(device, 100)

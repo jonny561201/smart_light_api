@@ -37,3 +37,5 @@ def __create_group(group):
 
 def __get_light_data(light):
     return tuya_utils.get_light_status(light)
+
+

@@ -2,7 +2,7 @@ import uuid
 from unittest.mock import patch
 
 from svc.repository.models.lights import Devices
-from svc.utils.tuya_utils import set_switch, set_switch_brightness
+from svc.utils.tuya_utils import set_switch, set_switch_brightness, set_switch_state
 
 
 @patch('svc.utils.tuya_utils.tinytuya')
@@ -45,3 +45,13 @@ class TestTuyaUtils:
         set_switch_brightness(self.DEVICE, 60)
 
         mock_tuya.OutletDevice.return_value.set_value.assert_called_with(2, 60 * 10)
+
+    def test_set_switch_state__should_turn_on_when_true(self, mock_tuya):
+        set_switch_state(self.DEVICE, True)
+
+        mock_tuya.OutletDevice.return_value.turn_on.assert_called()
+
+    def test_set_switch_state__should_turn_off_when_false(self, mock_tuya):
+        set_switch_state(self.DEVICE, False)
+
+        mock_tuya.OutletDevice.return_value.turn_off.assert_called()

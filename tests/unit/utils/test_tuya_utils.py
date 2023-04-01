@@ -1,13 +1,14 @@
 import uuid
 from unittest.mock import patch
 
-from svc.repository.models.lights import Devices
-from svc.utils.tuya_utils import set_switch, set_switch_brightness, set_switch_state
+from svc.repository.models.lights import Devices, DeviceTypes
+from svc.utils.tuya_utils import set_switch, set_switch_brightness, set_switch_state, get_light_status
 
 
 @patch('svc.utils.tuya_utils.tinytuya')
 class TestTuyaUtils:
-    DEVICE = Devices(id=str(uuid.uuid4()), name='test', ip_address='127.0.0.1', local_key='tester')
+    DEVICE_TYPE = DeviceTypes(name='outlet')
+    DEVICE = Devices(id=str(uuid.uuid4()), name='test', ip_address='127.0.0.1', local_key='tester', device_type=DEVICE_TYPE)
 
     def test_set_switch__should_turn_on_and_set_brightness_upon_request(self, mock_tuya):
         brightness = 50
@@ -55,3 +56,17 @@ class TestTuyaUtils:
         set_switch_state(self.DEVICE, False)
 
         mock_tuya.OutletDevice.return_value.turn_off.assert_called()
+
+    def test_get_light_status__when_outlet_device_should_call_status(self, mock_tuya):
+        get_light_status(self.DEVICE)
+
+        mock_tuya.OutletDevice.return_value.status.assert_called()
+
+    @patch('svc.utils.tuya_utils.map_light')
+    def test_get_light_status__when_outlet_device_should_map_result(self, mock_map, mock_tuya):
+        response = {'test': 'thing'}
+        status = {'dps': response}
+        mock_tuya.OutletDevice.return_value.status.return_value = status
+        get_light_status(self.DEVICE)
+
+        mock_map.assert_called_with(self.DEVICE, response)

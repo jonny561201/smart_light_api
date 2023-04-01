@@ -7,3 +7,8 @@
 **.DS_Store
 variables.sh
 settings.json
+
+tuya-raw.json
+tinytuya.json
+snapshot.json
+devices.json

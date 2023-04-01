@@ -29,5 +29,5 @@ class LightDatabase:
     def get_light_groups(self):
         return self.session.query(DeviceGroups).all()
 
-    def get_lights_by_group_id(self, group_id):
+    def get_lights_by(self, group_id):
         return self.session.query(Devices).filter_by(group_id=group_id).all()

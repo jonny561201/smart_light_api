@@ -1,19 +1,41 @@
 import tinytuya
 
+from svc.utils.mapper_utils import map_light
+
 GHOME_VERSION = 3.3
 
 
-def set_switch_brightness(switch_id, brightness):
-    #need to find switch ip/local key
-    test = tinytuya.OutletDevice(switch_id, '192.168.1.220', local_key='', version=GHOME_VERSION)
-    if brightness == 0:
-        test.turn_off()
+def set_switch(light, on, brightness):
+    switch = tinytuya.OutletDevice(light.device_id, light.ip_address, local_key=light.local_key, version=GHOME_VERSION)
+    if on and brightness:
+        switch.turn_on()
+        switch.set_value(2, brightness * 10)
+    elif on:
+        switch.turn_on()
     else:
-        test.turn_on()
-        test.set_value(2, brightness * 10)
+        switch.turn_off()
 
 
-def set_switch_state(switch_id, on):
-    #need to find switch ip/local key
-    switch = tinytuya.OutletDevice(switch_id, '192.168.1.220', local_key='', version=GHOME_VERSION)
+def set_switch_brightness(light, brightness):
+    switch = tinytuya.OutletDevice(light.device_id, light.ip_address, local_key=light.local_key, version=GHOME_VERSION)
+    if brightness == 0:
+        switch.turn_off()
+    else:
+        switch.turn_on()
+        switch.set_value(2, brightness * 10)
+
+
+def set_switch_state(light, on):
+    switch = tinytuya.OutletDevice(light.device_id, light.ip_address, local_key=light.local_key, version=GHOME_VERSION)
     switch.turn_on() if on else switch.turn_off()
+
+
+def get_light_status(light):
+    if light.device_type.name == 'outlet':
+        switch = tinytuya.OutletDevice(light.device_id, light.ip_address, local_key=light.local_key, version=GHOME_VERSION)
+        status = switch.status().get('dps')
+        return map_light(light, status)
+
+
+# device = Devices(name='test', ip_address='192.168.1.220', device_id='eb7e9698b75d2318f0hgsa', local_key='cf9b14ab2a5af47b')
+# set_switch_brightness(device, 50)

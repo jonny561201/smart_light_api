@@ -1,7 +1,7 @@
 from sqlalchemy import orm, create_engine
 
 from svc.config.settings_state import Settings
-from svc.repository.models.lights import DeviceGroups
+from svc.repository.models.lights import DeviceGroups, Devices
 
 
 class LightDatabaseManager:
@@ -29,3 +29,5 @@ class LightDatabase:
     def get_light_groups(self):
         return self.session.query(DeviceGroups).all()
 
+    def get_lights_by_group_id(self, group_id):
+        return self.session.query(Devices).filter_by(group_id=group_id).all()

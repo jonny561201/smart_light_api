@@ -27,15 +27,15 @@ def set_light_group(request):
 
 def __create_group(group):
     lights = list(map(__get_light_data, group.devices))
+    has_lights = len(lights) > 0
     return {
         'groupName': group.name,
         'groupId': str(group.id),
         'lights': lights,
-        # 'on': lights[0]
+        'on': lights[0]['on'] if has_lights else False,
+        'brightness': lights[0]['brightness'] if has_lights else 0
     }
 
 
 def __get_light_data(light):
     return tuya_utils.get_light_status(light)
-
-

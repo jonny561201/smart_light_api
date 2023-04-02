@@ -24,14 +24,24 @@ class TestLightServices:
         mock_db.return_value.__enter__.return_value.get_light_groups.assert_called()
 
     def test_get_light_groups__should_map_db_response(self, mock_db, mock_tuya):
-        light = {'name': 'Lamp', 'id': self.DEVICE_ONE_ID}
-        expected = [{'groupName': 'Bedroom', 'groupId': self.GROUP_ID, 'lights': [light]}]
+        light = {'name': 'Lamp', 'id': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}
+        expected = [{'groupName': 'Bedroom', 'groupId': self.GROUP_ID, 'lights': [light], 'on': True, 'brightness': 50}]
         mock_tuya.get_light_status.return_value = light
         mock_db.return_value.__enter__.return_value.get_light_groups.return_value = [self.DB_GROUP]
 
         actual = get_light_groups()
 
         assert actual == expected
+
+    def test_get_light_groups__should_set_on_and_brightness_to_default_when_zero_lights_returned(self, mock_db, mock_tuya):
+        group = DeviceGroups(id=self.GROUP_ID, name='Bedroom', devices=[])
+        mock_db.return_value.__enter__.return_value.get_light_groups.return_value = [group]
+        mock_tuya.get_light_status.return_value = []
+
+        actual = get_light_groups()
+
+        assert actual[0]['on'] == False
+        assert actual[0]['brightness'] == 0
 
     def test_set_light_groups__should_get_groups_from_db(self, mock_db, mock_tuya):
         request = {'groupId': 'abc134', 'on': True}

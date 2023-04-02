@@ -2,12 +2,18 @@ from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
 
 
-def update_light_state(data):
-    switch_id = data.get('lightId')
-    brightness = data.get('brightness')
-    on = data.get('on')
+def update_light_state(request):
+    switch_id = request.get('lightId')
+    brightness = request.get('brightness')
+    on = request.get('on')
 
     tuya_utils.set_switch(switch_id, on, brightness)
+
+
+def create_group(request):
+    name = request['name']
+    with LightDatabaseManager() as db:
+        return db.create_new_group(name)
 
 
 def get_light_groups():

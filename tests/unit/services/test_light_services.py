@@ -3,7 +3,7 @@ import uuid
 from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices
-from svc.services.light_service import get_light_groups, set_light_group
+from svc.services.light_service import get_light_groups, set_light_group, create_group
 
 
 @patch('svc.services.light_service.tuya_utils')
@@ -58,3 +58,19 @@ class TestLightServices:
 
         mock_tuya.set_switch.assert_any_call(self.DEVICE_ONE, request['on'], request['brightness'])
         mock_tuya.set_switch.assert_any_call(self.DEVICE_TWO, request['on'], request['brightness'])
+
+    def test_create_group__should_call_repository_with_name(self, mock_db, mock_tuya):
+        request = {'name': 'test name'}
+
+        create_group(request)
+
+        mock_db.return_value.__enter__.return_value.create_new_group.assert_called_with(request['name'])
+
+    def test_create_group__should_return_response_from_repository(self, mock_db, mock_tuya):
+        request = {'name': 'test'}
+        id = str(uuid.uuid4())
+        mock_db.return_value.__enter__.return_value.create_new_group.return_value = id
+
+        actual = create_group(request)
+
+        assert actual == id

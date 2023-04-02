@@ -1,4 +1,5 @@
 import uuid
+from unittest.mock import patch
 
 from svc.repository.light_repository import LightDatabaseManager
 from svc.repository.models.lights import DeviceGroups, Devices
@@ -44,3 +45,23 @@ class TestDbIntegration:
             assert actual[0].name == 'Table Lamp'
             assert actual[0].local_key == 'test2'
             assert actual[0].ip_address == '192.0.0.120'
+
+    def test_create_new_group__should_insert_new_group_record(self):
+        name = 'my fake room'
+        with LightDatabaseManager() as db:
+            db.create_new_group(name)
+
+        with LightDatabaseManager() as db:
+            actual = db.session.query(DeviceGroups).filter_by(name=name).first()
+
+            assert actual.name == name
+
+    @patch('svc.repository.light_repository.uuid')
+    def test_create_new_group__should_return_new_group_id(self, mock_uuid):
+        new_key = uuid.uuid4()
+        mock_uuid.uuid4.return_value = new_key
+
+        with LightDatabaseManager() as db:
+            actual = db.create_new_group('test name')
+
+            assert actual == new_key

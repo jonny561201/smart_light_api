@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy import orm, create_engine
 
 from svc.config.settings_state import Settings
@@ -31,3 +33,9 @@ class LightDatabase:
 
     def get_lights_by(self, group_id):
         return self.session.query(Devices).filter_by(group_id=group_id).all()
+
+    def create_new_group(self, name):
+        group = DeviceGroups(id=(uuid.uuid4()), name=name)
+        self.session.add(group)
+
+        return group.id

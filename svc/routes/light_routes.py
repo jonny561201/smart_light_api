@@ -19,3 +19,10 @@ def set_light_state():
 def get_all_light_groups():
     content = light_service.get_light_groups()
     return Response(json.dumps(content), status=200, headers=DEFAULT_HEADERS)
+
+
+@LIGHT_BLUEPRINT.route('/group/state', methods=['POST'])
+def set_light_group():
+    data = json.loads(request.data.decode('UTF-8'))
+    light_service.set_light_group(data)
+    return Response(status=200, headers=DEFAULT_HEADERS)

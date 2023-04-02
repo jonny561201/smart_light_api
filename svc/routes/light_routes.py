@@ -26,3 +26,10 @@ def set_light_group():
     data = json.loads(request.data.decode('UTF-8'))
     light_service.set_light_group(data)
     return Response(status=200, headers=DEFAULT_HEADERS)
+
+
+@LIGHT_BLUEPRINT.route('/group/create', methods=['POST'])
+def create_new_group():
+    data = json.loads(request.data.decode('UTF-8'))
+    group_id = light_service.create_group(data)
+    return Response(json.dumps(group_id), status=200, headers=DEFAULT_HEADERS)

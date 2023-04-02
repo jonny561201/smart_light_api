@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from mock.mock import patch
 
@@ -48,3 +49,13 @@ class TestLightRoutes:
         self.TEST_CLIENT.post('/lights/group/state', data=json.dumps(body))
 
         mock_service.set_light_group.assert_called_with(body)
+
+    def test_create_light_group__should_return_id_from_service(self, mock_service):
+        body = {'name': 'doesnt matter'}
+        group_id = str(uuid.uuid4())
+        mock_service.create_group.return_value = group_id
+
+        actual = self.TEST_CLIENT.post('/lights/group/create', data=json.dumps(body))
+
+        actual.status_code = 200
+        assert json.loads(actual.data) == group_id

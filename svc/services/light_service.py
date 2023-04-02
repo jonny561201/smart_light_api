@@ -5,13 +5,15 @@ from svc.utils import tuya_utils
 def update_light_state(data):
     switch_id = data.get('lightId')
     brightness = data.get('brightness')
-    tuya_utils.set_switch_brightness(switch_id, brightness)
+    on = data.get('on')
+
+    tuya_utils.set_switch(switch_id, on, brightness)
 
 
 def get_light_groups():
     with LightDatabaseManager() as db:
         groups = db.get_light_groups()
-        return list(map(__create_group, groups))
+        return list(map(__map_group, groups))
 
 
 def set_light_group(request):
@@ -25,7 +27,7 @@ def set_light_group(request):
             tuya_utils.set_switch(light, on, brightness)
 
 
-def __create_group(group):
+def __map_group(group):
     lights = list(map(__get_light_data, group.devices))
     has_lights = len(lights) > 0
     return {

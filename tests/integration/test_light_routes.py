@@ -66,3 +66,8 @@ class TestLightRoutes:
 
         mock_service.delete_group.assert_called_with(group_id)
 
+    def test_delete_group_by_id__should_return_success(self, mock_service):
+        group_id = str(uuid.uuid4())
+        actual = self.TEST_CLIENT.delete(f'/lights/group/{group_id}')
+
+        assert actual.status_code == 200

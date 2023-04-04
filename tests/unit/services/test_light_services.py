@@ -3,7 +3,7 @@ import uuid
 from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices
-from svc.services.light_service import get_light_groups, set_light_group, create_group
+from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group
 
 
 @patch('svc.services.light_service.tuya_utils')
@@ -68,9 +68,15 @@ class TestLightServices:
 
     def test_create_group__should_return_response_from_repository(self, mock_db, mock_tuya):
         request = {'name': 'test'}
-        id = str(uuid.uuid4())
-        mock_db.return_value.__enter__.return_value.create_new_group.return_value = id
+        group_id = str(uuid.uuid4())
+        mock_db.return_value.__enter__.return_value.create_new_group.return_value = group_id
 
         actual = create_group(request)
 
-        assert actual == id
+        assert actual == group_id
+
+    def test_delete_group__should_call_database_method_to_delete(self, mock_db, mock_tuya):
+        group_id = str(uuid.uuid4())
+        delete_group(group_id)
+
+        mock_db.return_value.__enter__.return_value.delete_group_by.assert_called_with(group_id)

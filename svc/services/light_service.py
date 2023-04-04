@@ -16,6 +16,11 @@ def create_group(request):
         return db.create_new_group(name)
 
 
+def delete_group(group_id):
+    with LightDatabaseManager() as db:
+        db.delete_group_by(group_id)
+
+
 def get_light_groups():
     with LightDatabaseManager() as db:
         groups = db.get_light_groups()

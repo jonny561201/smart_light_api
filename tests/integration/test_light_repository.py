@@ -65,3 +65,13 @@ class TestDbIntegration:
             actual = db.create_new_group('test name')
 
             assert actual == new_key
+
+    def test_delete_group__should_remove_group_by_id(self):
+        with LightDatabaseManager() as db:
+            db.delete_group_by(self.GROUP_TWO_ID)
+
+        with LightDatabaseManager() as db:
+            actual = db.session.query(DeviceGroups).filter_by(id=self.GROUP_TWO_ID).first()
+            light = db.session.query(Devices).filter_by(id=self.DEVICE_TWO_ID).first()
+            assert actual is None
+            assert str(light.id) == self.DEVICE_TWO_ID

@@ -37,5 +37,10 @@ class LightDatabase:
     def create_new_group(self, name):
         group = DeviceGroups(id=(uuid.uuid4()), name=name)
         self.session.add(group)
-
         return group.id
+
+    def delete_group_by(self, group_id):
+        lights = self.session.query(Devices).filter_by(group_id=group_id).all()
+        for light in lights:
+            self.session.delete(light.device_group)
+        self.session.query(DeviceGroups).filter_by(id=group_id).delete()

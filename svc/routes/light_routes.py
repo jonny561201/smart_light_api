@@ -33,3 +33,11 @@ def create_new_group():
     data = json.loads(request.data.decode('UTF-8'))
     group_id = light_service.create_group(data)
     return Response(json.dumps(group_id), status=200, headers=DEFAULT_HEADERS)
+
+
+@LIGHT_BLUEPRINT.route('/group/<group_id>', methods=['DELETE'])
+def delete_group_by_id(group_id):
+    light_service.delete_group(group_id)
+
+# TODO: endpoint to add items to the group/remove item from group
+# TODO: endpoint to scan for new lights return job guid and endpoint to check status of job

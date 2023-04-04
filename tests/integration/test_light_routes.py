@@ -59,3 +59,10 @@ class TestLightRoutes:
 
         actual.status_code = 200
         assert json.loads(actual.data) == group_id
+
+    def test_delete_group_by_id__should_call_service(self, mock_service):
+        group_id = str(uuid.uuid4())
+        self.TEST_CLIENT.delete(f'/lights/group/{group_id}')
+
+        mock_service.delete_group.assert_called_with(group_id)
+

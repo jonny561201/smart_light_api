@@ -37,6 +37,12 @@ class TestDbIntegration:
             assert len(actual[0].devices) == 1
             assert actual[0].devices[0].name == 'Desk Lamp'
 
+    def test_get_all_lights__should_return_all_devices(self):
+        with LightDatabaseManager() as db:
+            actual = db.get_all_lights()
+
+            assert actual == [self.DEVICE_ONE.device_id, self.DEVICE_TWO.device_id]
+
     def test_get_lights_by_group_id__should_return_records_from_database(self):
         with LightDatabaseManager() as db:
             actual = db.get_lights_by(self.GROUP_TWO_ID)

@@ -38,6 +38,14 @@ def set_light_group(request):
             tuya_utils.set_switch(light, on, brightness)
 
 
+def get_unregistered_devices():
+    devices = tuya_utils.scan_for_devices()
+    with LightDatabaseManager() as db:
+        registered_lights = db.get_all_lights()
+        registered_id = [light.device_id for light in registered_lights]
+        return [device for device in devices if device.get('id') in registered_id ]
+
+
 def __map_group(group):
     lights = list(map(__get_light_data, group.devices))
     has_lights = len(lights) > 0

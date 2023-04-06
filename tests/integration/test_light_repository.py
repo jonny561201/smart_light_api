@@ -8,13 +8,13 @@ from svc.repository.models.lights import DeviceGroups, Devices
 class TestDbIntegration:
     GROUP_ONE_ID = str(uuid.uuid4())
     GROUP_TWO_ID = str(uuid.uuid4())
-    DEVICE_ONE_ID = str(uuid.uuid4())
-    DEVICE_TWO_ID = str(uuid.uuid4())
+    ID_ONE = str(uuid.uuid4())
+    ID_TWO = str(uuid.uuid4())
 
     GROUP_ONE = DeviceGroups(id=GROUP_ONE_ID, name='Bedroom')
     GROUP_TWO = DeviceGroups(id=GROUP_TWO_ID, name='Kitchen')
-    DEVICE_ONE = Devices(id=DEVICE_ONE_ID, name='Desk Lamp', ip_address='192.0.0.121', local_key='test1', device_id=str(uuid.uuid4()), type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_ONE)
-    DEVICE_TWO = Devices(id=DEVICE_TWO_ID, name='Table Lamp', ip_address='192.0.0.120', local_key='test2', device_id=str(uuid.uuid4()), type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_TWO)
+    DEVICE_ONE = Devices(id=ID_ONE, name='Desk Lamp', ip_address='192.0.0.121', local_key='test1', device_id=str(uuid.uuid4()), type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_ONE)
+    DEVICE_TWO = Devices(id=ID_TWO, name='Table Lamp', ip_address='192.0.0.120', local_key='test2', device_id=str(uuid.uuid4()), type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_TWO)
 
     def setup_method(self):
         with LightDatabaseManager() as db:
@@ -41,7 +41,8 @@ class TestDbIntegration:
         with LightDatabaseManager() as db:
             actual = db.get_all_lights()
 
-            assert actual == [self.DEVICE_ONE.device_id, self.DEVICE_TWO.device_id]
+            assert str(actual[0].id) == self.ID_ONE
+            assert str(actual[1].id) == self.ID_TWO
 
     def test_get_lights_by_group_id__should_return_records_from_database(self):
         with LightDatabaseManager() as db:
@@ -78,6 +79,6 @@ class TestDbIntegration:
 
         with LightDatabaseManager() as db:
             actual = db.session.query(DeviceGroups).filter_by(id=self.GROUP_TWO_ID).first()
-            light = db.session.query(Devices).filter_by(id=self.DEVICE_TWO_ID).first()
+            light = db.session.query(Devices).filter_by(id=self.ID_TWO).first()
             assert actual is None
-            assert str(light.id) == self.DEVICE_TWO_ID
+            assert str(light.id) == self.ID_TWO

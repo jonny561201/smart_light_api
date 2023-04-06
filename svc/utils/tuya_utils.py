@@ -1,9 +1,6 @@
-import time
-
 import tinytuya
 
 from svc.config.tuya_constants import GHOME
-from svc.repository.models.lights import Devices
 from svc.utils.mapper_utils import map_light
 
 
@@ -42,11 +39,3 @@ def get_light_status(light):
 def scan_for_devices():
     devices = tinytuya.deviceScan()
     return [v for k, v in devices.items()]
-
-
-
-# device = Devices(name='test', ip_address='192.168.1.220', device_id='eb7e9698b75d2318f0hgsa', local_key='cf9b14ab2a5af47b')
-# set_switch_brightness(device, 100)
-# start = time.time()
-# scan_for_devices()
-# print(f'Elapsed: {time.time() - start}(s)')

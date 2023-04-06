@@ -43,7 +43,7 @@ def get_unregistered_devices():
     with LightDatabaseManager() as db:
         registered_lights = db.get_all_lights()
         registered_id = [light.device_id for light in registered_lights]
-        return [device for device in devices if device.get('id') in registered_id ]
+        return [device for device in devices if device.get('id') not in registered_id ]
 
 
 def __map_group(group):

@@ -3,7 +3,8 @@ import uuid
 from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices
-from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group
+from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group, \
+    get_unregistered_devices
 
 
 @patch('svc.services.light_service.tuya_utils')
@@ -80,3 +81,19 @@ class TestLightServices:
         delete_group(group_id)
 
         mock_db.return_value.__enter__.return_value.delete_group_by.assert_called_with(group_id)
+
+    def test_get_unregistered_devices__should_query_tuya_devices_scan(self, mock_db, mock_tuya):
+        get_unregistered_devices()
+
+        mock_tuya.scan_for_devices.assert_called()
+
+    def test_get_unregistered_devices__should_compare_devices_from_scan_and_database(self, mock_db, mock_tuya):
+        device_id = '1234'
+        expected_device = {'id': '234235'}
+        mock_tuya.scan_for_devices.return_value = [{'id': device_id}, expected_device]
+        device_one = Devices(device_id=device_id)
+        mock_db.return_value.__enter__.return_value.get_all_lights.return_value = [device_one]
+
+        actual = get_unregistered_devices()
+
+        assert actual == [expected_device]

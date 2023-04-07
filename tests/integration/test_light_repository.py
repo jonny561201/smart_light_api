@@ -2,7 +2,7 @@ import uuid
 from unittest.mock import patch
 
 from svc.repository.light_repository import LightDatabaseManager
-from svc.repository.models.lights import DeviceGroups, Devices
+from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 
 
 class TestDbIntegration:
@@ -27,6 +27,7 @@ class TestDbIntegration:
         with LightDatabaseManager() as db:
             db.session.query(Devices).delete()
             db.session.query(DeviceGroups).delete()
+            db.session.query(UnregisteredDevices).delete()
 
     def test_get_light_groups__should_return_records_from_database(self):
         with LightDatabaseManager() as db:
@@ -52,6 +53,20 @@ class TestDbIntegration:
             assert actual[0].name == 'Table Lamp'
             assert actual[0].local_key == 'test2'
             assert actual[0].ip_address == '192.0.0.120'
+
+    def test_insert_unregistered_devices__should_insert_records(self):
+        device_one = {'name': 'test1', 'ip': '127.0.0.1', 'id': '87asyds23', 'key': '234SAHDF'}
+        device_two = {'name': 'test2', 'ip': '127.0.0.2', 'id': '549ADSF87', 'key': '657DFA58'}
+        devices = [device_one, device_two]
+        with LightDatabaseManager() as db:
+            db.insert_unregistered_devices(devices)
+
+        with LightDatabaseManager() as db:
+            actual = db.session.query(UnregisteredDevices).all()
+
+            assert len(actual) == 2
+            assert actual[0].name == device_one['name']
+            assert actual[1].name == device_two['name']
 
     def test_create_new_group__should_insert_new_group_record(self):
         name = 'my fake room'

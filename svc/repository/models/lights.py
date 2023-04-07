@@ -35,3 +35,14 @@ class Devices(Base):
 
     device_type = relationship('DeviceTypes', foreign_keys='Devices.type_id')
     device_group = relationship('DeviceGroups', foreign_keys='Devices.group_id')
+
+
+class UnregisteredDevices(Base):
+    __tablename__ = 'unregistered_devices'
+
+    id = Column(UUID, nullable=False, primary_key=True, server_default=text('gen_random_uuid()'))
+    name = Column(String, nullable=False)
+    ip_address = Column(INET, nullable=False)
+    local_key = Column(String, nullable=False)
+    device_id = Column(String, nullable=False)
+

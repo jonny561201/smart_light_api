@@ -1,5 +1,6 @@
 from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
+from multiprocessing import cpu_count, Pool
 
 
 def update_light_state(request):
@@ -43,10 +44,13 @@ def get_unregistered_devices():
     with LightDatabaseManager() as db:
         registered_lights = db.get_all_lights()
         registered_id = [light.device_id for light in registered_lights]
-        return [device for device in devices if device.get('id') not in registered_id]
+        unregistered_devices = [device for device in devices if device.get('id') not in registered_id]
+        db.insert_unregistered_devices(unregistered_devices)
 
 
 def __map_group(group):
+    # pool = Pool(cpu_count() - 1)
+    # lights = pool.map(__get_light_data, group.devices)
     lights = list(map(__get_light_data, group.devices))
     has_lights = len(lights) > 0
     return {

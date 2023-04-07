@@ -42,7 +42,7 @@ def delete_group_by_id(group_id):
 
 # TODO: endpoint to add items to the group/remove item from group
 # TODO: endpoint to scan for new lights return job guid and endpoint to check status of job
-# TODO: how to kick off job and start task (celery?)
+# TODO: how to kick off job and start task (celery uses a broker like redis/rabbitmq?)
 # TODO: try out multiprocessing pool
 # from multiprocessing import cpu_count, Pool
 

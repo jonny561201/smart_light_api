@@ -36,6 +36,12 @@ def get_light_status(light):
         return map_light(light, status)
 
 
+# def get_moar_light_status(light):
+#     switch = tinytuya.OutletDevice(light['deviceId'], light['ipAddress'], local_key=light['localKey'], version=GHOME.VERSION)
+#     status = switch.status().get('dps')
+#     return map_moar_light(light, status)
+
+
 def scan_for_devices():
     devices = tinytuya.deviceScan()
     return [v for k, v in devices.items()]

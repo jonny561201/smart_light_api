@@ -10,6 +10,15 @@ def map_light(light, status):
         'brightness': status.get(DeviceStates.BRIGHTNESS)
     }
 
+# def map_moar_light(light, status):
+#     return {
+#         'lightName': light['name'],
+#         'lightId': light['id'],
+#         'groupId': light['groupId'],
+#         'on': status.get(DeviceStates.ON),
+#         'brightness': status.get(DeviceStates.BRIGHTNESS)
+#     }
+
 # [
 #     { groupId: 1, groupName: 'Living Room', brightness: 100, on: true, lights: [
 #         { brightness: 80, lightName: 'lamp', lightId: 2, groupId: 1, on: true },

@@ -31,6 +31,10 @@ class LightDatabase:
     def get_light_groups(self):
         return self.session.query(DeviceGroups).all()
 
+    # def get_moar_light_groups(self):
+    #     groups = self.session.query(DeviceGroups).all()
+    #     return list(map(self.__map_group, groups))
+
     def get_all_lights(self):
         return self.session.query(Devices).all()
 
@@ -38,7 +42,7 @@ class LightDatabase:
         return self.session.query(Devices).filter_by(group_id=group_id).all()
 
     def insert_unregistered_devices(self, devices):
-        new_devices = [self.__create_new_device(device) for device in devices]
+        new_devices = [self.__map_new_device(device) for device in devices]
         self.session.add_all(new_devices)
 
     def create_new_group(self, name):
@@ -53,5 +57,25 @@ class LightDatabase:
         self.session.query(DeviceGroups).filter_by(id=group_id).delete()
 
     @staticmethod
-    def __create_new_device(device):
+    def __map_new_device(device):
         return UnregisteredDevices(name=device.get('name'), ip_address=device.get('ip'), device_id=device.get('id'), local_key=device.get('key'))
+
+    # @staticmethod
+    # def __map_group(group):
+    #     devices = list(map(LightDatabase.__map_light, group.devices))
+    #     return {
+    #         'id': str(group.id),
+    #         'name': group.name,
+    #         'devices': devices
+    #     }
+    #
+    # @staticmethod
+    # def __map_light(light):
+    #     return {
+    #         'id': str(light.id),
+    #         'name': light.name,
+    #         'ipAddress': light.ip_address,
+    #         'localKey': light.local_key,
+    #         'deviceId': light.device_id,
+    #         'groupId': light.group_id
+    #     }

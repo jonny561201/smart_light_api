@@ -1,6 +1,10 @@
+import time
+
 from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
-from multiprocessing import cpu_count, Pool
+# from multiprocessing import cpu_count, Pool, freeze_support
+
+# from svc.utils.mapper_utils import map_moar_light
 
 
 def update_light_state(request):
@@ -24,8 +28,14 @@ def delete_group(group_id):
 
 def get_light_groups():
     with LightDatabaseManager() as db:
-        groups = db.get_light_groups()
-        return list(map(__map_group, groups))
+        device_groups = db.get_light_groups()
+        return list(map(__map_group, device_groups))
+
+
+# def get_moar_light_groups():
+#     with LightDatabaseManager() as db:
+#         device_groups = db.get_moar_light_groups()
+#         return list(map(__map_moar_group, device_groups))
 
 
 def set_light_group(request):
@@ -49,8 +59,6 @@ def get_unregistered_devices():
 
 
 def __map_group(group):
-    # pool = Pool(cpu_count() - 1)
-    # lights = pool.map(__get_light_data, group.devices)
     lights = list(map(__get_light_data, group.devices))
     has_lights = len(lights) > 0
     return {
@@ -62,5 +70,35 @@ def __map_group(group):
     }
 
 
+# def __map_moar_group(group):
+#     pool = Pool(cpu_count() - 1)
+#     lights = pool.map(__map_moar_light_data, group['devices'])
+#     has_lights = len(lights) > 0
+#     return {
+#         'groupName': group['name'],
+#         'groupId': group['id'],
+#         'lights': lights,
+#         'on': lights[0]['on'] if has_lights else False,
+#         'brightness': lights[0]['brightness'] if has_lights else 0
+#     }
+
+
 def __get_light_data(light):
     return tuya_utils.get_light_status(light)
+
+# def __map_moar_light_data(light):
+#     return tuya_utils.get_moar_light_status(light)
+
+
+# if __name__ == '__main__':
+#     freeze_support()
+#
+#     start = time.time()
+#     groups = get_moar_light_groups()
+#     print(f'Seconds: {time.time() - start}')
+#     print(groups)
+
+
+start = time.time()
+groups = get_light_groups()
+print(f'Seconds: {time.time() - start}')

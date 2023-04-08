@@ -60,7 +60,7 @@ class LightDatabase:
 
     @staticmethod
     def __map_new_device(device):
-        return UnregisteredDevices(name=device.get('name'), ip_address=device.get('ip'), device_id=device.get('id'), local_key=device.get('key'))
+        return UnregisteredDevices(name=device.get('name'), ip_address=device.get('ip'), id=device.get('id'), local_key=device.get('key'))
 
     # @staticmethod
     # def __map_group(group):

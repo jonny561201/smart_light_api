@@ -48,6 +48,10 @@ class LightDatabase:
     def delete_unregistered_light_by(self, unregistered):
         self.session.delete(unregistered)
 
+    def update_light_group(self, light_id, group_id):
+        light = self.session.query(Devices).filter_by(id=light_id).first()
+        light.group_id = group_id
+
     def insert_unregistered_devices(self, devices):
         new_devices = [self.__map_new_device(device) for device in devices]
         for device in new_devices:

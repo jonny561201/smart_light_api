@@ -107,3 +107,11 @@ class TestDbIntegration:
             light = db.session.query(Devices).filter_by(id=self.ID_TWO).first()
             assert actual is None
             assert str(light.id) == self.ID_TWO
+
+    def test_update_light_group__should_update_devices_group_id(self):
+        with LightDatabaseManager() as db:
+            db.update_light_group(self.ID_ONE, self.GROUP_TWO_ID)
+
+        with LightDatabaseManager() as db:
+            actual = db.session.query(Devices).filter_by(id=self.ID_ONE).first()
+            assert str(actual.group_id) == self.GROUP_TWO_ID

@@ -4,7 +4,7 @@ from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group, \
-    get_unregistered_devices, assign_group
+    get_unregistered_devices, assign_group, update_group
 
 
 @patch('svc.services.light_service.tuya_utils')
@@ -122,3 +122,10 @@ class TestLightServices:
         assign_group(request)
 
         mock_db.return_value.__enter__.return_value.delete_unregistered_light_by.assert_called_with(device)
+
+    def test_update_group__should_call_to_update_light_group_with_request(self, mock_db, mock_tuya):
+        request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
+
+        update_group(request)
+
+        mock_db.return_value.__enter__.return_value.update_light_group.assert_called_with(request['lightId'], request['groupId'])

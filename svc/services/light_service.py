@@ -41,6 +41,12 @@ def assign_group(request):
         db.delete_unregistered_light_by(unregistered)
 
 
+def update_group(request):
+    light_id = request.get('lightId')
+    group_id = request.get('groupId')
+    with LightDatabaseManager() as db:
+        db.update_light_group(light_id, group_id)
+
 
 # def get_moar_light_groups():
 #     with LightDatabaseManager() as db:

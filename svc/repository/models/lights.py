@@ -25,11 +25,10 @@ class DeviceGroups(Base):
 class Devices(Base):
     __tablename__ = 'devices'
 
-    id = Column(UUID, nullable=False, primary_key=True, server_default=text('gen_random_uuid()'))
+    id = Column(String, nullable=False, primary_key=True)
     name = Column(String, nullable=False)
     ip_address = Column(INET, nullable=False)
     local_key = Column(String, nullable=False)
-    device_id = Column(String, nullable=False)
     type_id = Column(UUID, ForeignKey(DeviceTypes.id))
     group_id = Column(UUID, ForeignKey(DeviceGroups.id))
 
@@ -40,9 +39,8 @@ class Devices(Base):
 class UnregisteredDevices(Base):
     __tablename__ = 'unregistered_devices'
 
-    id = Column(UUID, nullable=False, primary_key=True, server_default=text('gen_random_uuid()'))
+    id = Column(String, nullable=False, primary_key=True)
     name = Column(String, nullable=False)
     ip_address = Column(INET, nullable=False)
     local_key = Column(String, nullable=False)
-    device_id = Column(String, nullable=False)
 

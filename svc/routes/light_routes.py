@@ -40,22 +40,12 @@ def delete_group_by_id(group_id):
     light_service.delete_group(group_id)
     return Response(status=200, headers=DEFAULT_HEADERS)
 
+
+@LIGHT_BLUEPRINT.route('/unregistered', methods=['GET'])
+def get_unregistered_lights():
+    content = light_service.get_unregistered_devices()
+    return Response(json.dumps(content), status=200, headers=DEFAULT_HEADERS)
+
 # TODO: endpoint to add items to the group/remove item from group
 # TODO: endpoint to scan for new lights return job guid and endpoint to check status of job
 # TODO: how to kick off job and start task (celery uses a broker like redis/rabbitmq?)
-# TODO: try out multiprocessing pool
-# from multiprocessing import cpu_count, Pool
-
-# def process(data):
-#     # best to do heavy CPU-bound work here...
-#
-#     # file write for demonstration
-#     with open("%s.txt" % data, "w") as f:
-#         f.write(data)
-#
-#     # example of returning a result to the map
-#     return data.upper()
-#
-# tasks = ["data1", "data2", "data3"]
-# pool = Pool(cpu_count() - 1)
-# print(pool.map(process, tasks))

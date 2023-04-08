@@ -2,9 +2,9 @@ import uuid
 
 from mock import patch
 
-from svc.repository.models.lights import DeviceGroups, Devices
+from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group, \
-    get_unregistered_devices
+    get_unregistered_devices, assign_group
 
 
 @patch('svc.services.light_service.tuya_utils')
@@ -97,3 +97,28 @@ class TestLightServices:
         actual = get_unregistered_devices()
 
         assert actual == [expected_device]
+
+    def test_assign_group__should_get_unregistered_devices_by_id(self, mock_db, mock_tuya):
+        request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
+
+        assign_group(request)
+
+        mock_db.return_value.__enter__.return_value.get_unregistered_light_by.assert_called_with(request['lightId'])
+
+    def test_assign_group__should_call_to_assign_new_light(self, mock_db, mock_tuya):
+        request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
+        device = UnregisteredDevices()
+        mock_db.return_value.__enter__.return_value.get_unregistered_light_by.return_value = device
+
+        assign_group(request)
+
+        mock_db.return_value.__enter__.return_value.assign_new_light.assert_called_with(device, request['groupId'])
+
+    def test_assign_group__should_delete_unregistered_device(self, mock_db, mock_tuya):
+        request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
+        device = UnregisteredDevices()
+        mock_db.return_value.__enter__.return_value.get_unregistered_light_by.return_value = device
+
+        assign_group(request)
+
+        mock_db.return_value.__enter__.return_value.delete_unregistered_light_by.assert_called_with(device)

@@ -61,5 +61,4 @@ def update_light_group():
     return Response(status=200, headers=DEFAULT_HEADERS)
 
 # TODO: get_all_light_groups needs to return unassigned lights too
-# TODO: endpoint to add items to the group/remove item from group
 # TODO: how to kick off job and start task (celery uses a broker like redis/rabbitmq?)

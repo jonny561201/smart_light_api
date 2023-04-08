@@ -46,12 +46,20 @@ def get_unregistered_lights():
     content = light_service.get_unregistered_devices()
     return Response(json.dumps(content), status=200, headers=DEFAULT_HEADERS)
 
+
 @LIGHT_BLUEPRINT.route('/group/assign', methods=['POST'])
 def assign_light_group():
     data = json.loads(request.data.decode('UTF-8'))
     light_service.assign_group(data)
     return Response(status=200, headers=DEFAULT_HEADERS)
 
+
+@LIGHT_BLUEPRINT.route('/group/update', methods=['POST'])
+def update_light_group():
+    data = json.loads(request.data.decode('UTF-8'))
+    light_service.update_group(data)
+    return Response(status=200, headers=DEFAULT_HEADERS)
+
+# TODO: get_all_light_groups needs to return unassigned lights too
 # TODO: endpoint to add items to the group/remove item from group
-# TODO: endpoint to scan for new lights return job guid and endpoint to check status of job
 # TODO: how to kick off job and start task (celery uses a broker like redis/rabbitmq?)

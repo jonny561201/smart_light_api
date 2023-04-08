@@ -13,8 +13,8 @@ class TestDbIntegration:
 
     GROUP_ONE = DeviceGroups(id=GROUP_ONE_ID, name='Bedroom')
     GROUP_TWO = DeviceGroups(id=GROUP_TWO_ID, name='Kitchen')
-    DEVICE_ONE = Devices(id=ID_ONE, name='Desk Lamp', ip_address='192.0.0.121', local_key='test1', device_id=str(uuid.uuid4()), type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_ONE)
-    DEVICE_TWO = Devices(id=ID_TWO, name='Table Lamp', ip_address='192.0.0.120', local_key='test2', device_id=str(uuid.uuid4()), type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_TWO)
+    DEVICE_ONE = Devices(id=ID_ONE, name='Desk Lamp', ip_address='192.0.0.121', local_key='test1', type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_ONE)
+    DEVICE_TWO = Devices(id=ID_TWO, name='Table Lamp', ip_address='192.0.0.120', local_key='test2', type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', device_group=GROUP_TWO)
 
     def setup_method(self):
         with LightDatabaseManager() as db:
@@ -44,6 +44,16 @@ class TestDbIntegration:
 
             assert str(actual[0].id) == self.ID_ONE
             assert str(actual[1].id) == self.ID_TWO
+
+    def test_get_unregistered_light_by__should_return_record_from_database(self):
+        id = str(uuid.uuid4())
+        unregistered = UnregisteredDevices(id=id, name='test', ip_address='192.1.1.1', local_key='key test')
+        with LightDatabaseManager() as db:
+            db.session.add(unregistered)
+
+        with LightDatabaseManager() as db:
+            actual = db.get_unregistered_light_by(id)
+            assert actual.id == id
 
     def test_get_lights_by_group_id__should_return_records_from_database(self):
         with LightDatabaseManager() as db:

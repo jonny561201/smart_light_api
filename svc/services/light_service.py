@@ -32,6 +32,16 @@ def get_light_groups():
         return list(map(__map_group, device_groups))
 
 
+def assign_group(request):
+    unregistered_id = request.get('lightId')
+    group_id = request.get('groupId')
+    with LightDatabaseManager() as db:
+        unregistered = db.get_unregistered_light_by(unregistered_id)
+        db.assign_new_light(unregistered, group_id)
+        db.delete_unregistered_light_by(unregistered)
+
+
+
 # def get_moar_light_groups():
 #     with LightDatabaseManager() as db:
 #         device_groups = db.get_moar_light_groups()
@@ -100,6 +110,6 @@ def __get_light_data(light):
 #     print(groups)
 
 
-start = time.time()
-groups = get_light_groups()
-print(f'Seconds: {time.time() - start}')
+# start = time.time()
+# groups = get_light_groups()
+# print(f'Seconds: {time.time() - start}')

@@ -3,6 +3,7 @@ import uuid
 from sqlalchemy import orm, create_engine
 
 from svc.config.settings_state import Settings
+from svc.config.tuya_constants import TuyaTypes
 from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 
 
@@ -41,11 +42,21 @@ class LightDatabase:
     def get_lights_by(self, group_id):
         return self.session.query(Devices).filter_by(group_id=group_id).all()
 
+    def get_unregistered_light_by(self, light_id):
+        return self.session.query(UnregisteredDevices).filter_by(id=light_id).first()
+
+    def delete_unregistered_light_by(self, unregistered):
+        self.session.delete(unregistered)
+
     def insert_unregistered_devices(self, devices):
         new_devices = [self.__map_new_device(device) for device in devices]
         for device in new_devices:
             self.session.merge(device)
         return new_devices
+
+    def assign_new_light(self, unregistered_light, group_id):
+        light = Devices(id=unregistered_light.id, name=unregistered_light.name, ip_address=unregistered_light.ip_address, local_key=unregistered_light.local_key, group_id=group_id, type_id=TuyaTypes.OUTLET)
+        self.session.add(light)
 
     def create_new_group(self, name):
         group = DeviceGroups(id=(uuid.uuid4()), name=name)

@@ -43,12 +43,14 @@ class LightDatabase:
 
     def insert_unregistered_devices(self, devices):
         new_devices = [self.__map_new_device(device) for device in devices]
-        self.session.add_all(new_devices)
+        for device in new_devices:
+            self.session.merge(device)
+        return new_devices
 
     def create_new_group(self, name):
         group = DeviceGroups(id=(uuid.uuid4()), name=name)
         self.session.add(group)
-        return group.id
+        return str(group.id)
 
     def delete_group_by(self, group_id):
         lights = self.session.query(Devices).filter_by(group_id=group_id).all()

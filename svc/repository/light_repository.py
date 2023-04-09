@@ -36,6 +36,9 @@ class LightDatabase:
     #     groups = self.session.query(DeviceGroups).all()
     #     return list(map(self.__map_group, groups))
 
+    def get_unassigned_lights(self):
+        return self.session.query(Devices).filter_by(group_id=None).all()
+
     def get_all_lights(self):
         return self.session.query(Devices).all()
 

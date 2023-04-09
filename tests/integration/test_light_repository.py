@@ -123,3 +123,16 @@ class TestDbIntegration:
         with LightDatabaseManager() as db:
             actual = db.session.query(Devices).filter_by(id=self.ID_TWO).first()
             assert actual.group_id is None
+
+    def test_get_unassigned_light_by__should_return_all_lights_without_group(self):
+        device = Devices(id=str(uuid.uuid4()), name='Unassigned', ip_address='192.1.1.1', local_key='doesnt matter', type_id='26cf7b35-8366-4c16-be9a-e0009bda62b6', group_id=None)
+        with LightDatabaseManager() as db:
+            db.session.add(device)
+
+        with LightDatabaseManager() as db:
+            actual = db.get_unassigned_lights()
+
+            assert len(actual) == 1
+            assert actual[0].name == 'Unassigned'
+            assert actual[0].ip_address == '192.1.1.1'
+

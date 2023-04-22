@@ -12,10 +12,16 @@ class TestMapperUtils:
     GROUP = DeviceGroups(id=GROUP_ID, name='Bedroom', devices=[DEVICE])
 
     def test_map_light__should_return_correct_light_group(self):
-        status = {DeviceStates.BRIGHTNESS: 500, DeviceStates.ON: False}
+        status = {DeviceStates.BRIGHTNESS: 500, DeviceStates.ON: True}
         actual = map_light(self.DEVICE, status)
 
         expected = {'lightName': self.DEVICE.name, 'lightId': str(self.DEVICE.id),
                        'groupId': str(self.DEVICE.group_id), 'on': status[DeviceStates.ON],
                        'brightness': status[DeviceStates.BRIGHTNESS]}
         assert actual == expected
+
+    def test_mal_light__should_return_zero_brightness_when_device_off(self):
+        status = {DeviceStates.BRIGHTNESS: 500, DeviceStates.ON: False}
+        actual = map_light(self.DEVICE, status)
+
+        assert actual['brightness'] == 0

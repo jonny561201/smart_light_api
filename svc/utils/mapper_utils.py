@@ -2,12 +2,13 @@ from svc.config.tuya_constants import DeviceStates
 
 
 def map_light(light, status):
+    currently_on = status.get(DeviceStates.ON)
     return {
         'lightName': light.name,
         'lightId': str(light.id),
         'groupId': str(light.group_id),
-        'on': status.get(DeviceStates.ON),
-        'brightness': status.get(DeviceStates.BRIGHTNESS)
+        'on': currently_on,
+        'brightness': status.get(DeviceStates.BRIGHTNESS) if currently_on else 0
     }
 
 # def map_moar_light(light, status):

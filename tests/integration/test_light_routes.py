@@ -74,12 +74,12 @@ class TestLightRoutes:
 
     def test_update_light_group__should_return_success(self, mock_service):
         request = {'groupId': str(uuid.uuid4()), 'lightId': str(uuid.uuid4())}
-        actual = self.TEST_CLIENT.post('/lights/group/update', data=json.dumps(request))
+        actual = self.TEST_CLIENT.post('/lights/group/light/update', data=json.dumps(request))
 
         assert actual.status_code == 200
 
     def test_update_light_group__should_call_service_layer_with_request(self, mock_service):
         request = {'groupId': str(uuid.uuid4()), 'lightId': str(uuid.uuid4())}
-        actual = self.TEST_CLIENT.post('/lights/group/update', data=json.dumps(request))
+        actual = self.TEST_CLIENT.post('/lights/group/light/update', data=json.dumps(request))
 
         mock_service.update_group.assert_called_with(request)

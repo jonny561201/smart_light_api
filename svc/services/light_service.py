@@ -1,4 +1,4 @@
-import time
+# import time
 
 from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
@@ -8,11 +8,13 @@ from svc.utils import tuya_utils
 
 
 def update_light_state(request):
-    switch_id = request.get('lightId')
+    light_id = request.get('lightId')
     brightness = request.get('brightness')
     on = request.get('on')
+    with LightDatabaseManager() as db:
+        light = db.get_light_by(light_id)
 
-    tuya_utils.set_switch(switch_id, on, brightness)
+        tuya_utils.set_switch(light, on, brightness)
 
 
 def create_group(request):

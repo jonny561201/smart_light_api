@@ -4,7 +4,7 @@ from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group, \
-    get_unregistered_devices, assign_group, update_group
+    get_unregistered_devices, assign_group, update_group, update_light_state
 
 
 @patch('svc.services.light_service.tuya_utils')
@@ -23,6 +23,19 @@ class TestLightServices:
         get_light_groups()
 
         mock_db.return_value.__enter__.return_value.get_light_groups.assert_called()
+
+    def test_update_light_state__should_call_db_for_light_by_id(self, mock_db, mock_tuya):
+        request = {'lightId': self.DEVICE_ONE_ID}
+        update_light_state(request)
+
+        mock_db.return_value.__enter__.return_value.get_light_by.assert_called_with(self.DEVICE_ONE_ID)
+
+    def test_update_light_state__should_set_tuya_switch(self, mock_db, mock_tuya):
+        request = {'lightId': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}
+        mock_db.return_value.__enter__.return_value.get_light_by.return_value = self.DEVICE_ONE
+        update_light_state(request)
+
+        mock_tuya.set_switch.assert_called_with(self.DEVICE_ONE, request['on'], request['brightness'])
 
     def test_get_light_groups__should_map_db_response(self, mock_db, mock_tuya):
         light = {'name': 'Lamp', 'id': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}

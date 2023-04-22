@@ -22,3 +22,9 @@
   - ```pip install -r requirements.txt```
   - ```pip install -r requirements_test.txt```
 - start app ```python app.py```
+- create a settings.json file for config (example below)
+  - "development": true,
+  - "dbName": "smart_lights",
+  - "dbPort": 5433,
+  - "dbUser": "postgres",
+  - "dbPass": "password"

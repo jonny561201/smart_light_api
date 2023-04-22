@@ -69,7 +69,7 @@ def get_unregistered_devices():
     devices = tuya_utils.scan_for_devices()
     with LightDatabaseManager() as db:
         registered_lights = db.get_all_lights()
-        registered_id = [light.device_id for light in registered_lights]
+        registered_id = [light.id for light in registered_lights]
         unregistered_devices = [device for device in devices if device.get('id') not in registered_id]
         db.insert_unregistered_devices(unregistered_devices)
         return unregistered_devices

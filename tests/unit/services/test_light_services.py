@@ -91,7 +91,7 @@ class TestLightServices:
         device_id = '1234'
         expected_device = {'id': '234235'}
         mock_tuya.scan_for_devices.return_value = [{'id': device_id}, expected_device]
-        device_one = Devices(device_id=device_id)
+        device_one = Devices(id=device_id)
         mock_db.return_value.__enter__.return_value.get_all_lights.return_value = [device_one]
 
         actual = get_unregistered_devices()

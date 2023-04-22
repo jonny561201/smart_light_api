@@ -10,6 +10,7 @@
   - turn lights on/off
   - return status of existing device
   - organize devices into groups
+  - scan for newly added devices and register with a group
 
 
 

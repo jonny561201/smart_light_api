@@ -38,6 +38,13 @@ class TestDbIntegration:
             assert len(actual[0].devices) == 1
             assert actual[0].devices[0].name == 'Desk Lamp'
 
+    def test_get_light_by__should_return_single_matching_device(self):
+        with LightDatabaseManager() as db:
+            actual = db.get_light_by(self.ID_TWO)
+
+            assert actual.name == 'Table Lamp'
+            assert actual.ip_address == '192.0.0.120'
+
     def test_get_all_lights__should_return_all_devices(self):
         with LightDatabaseManager() as db:
             actual = db.get_all_lights()

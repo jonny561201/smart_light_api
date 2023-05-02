@@ -54,11 +54,12 @@ def assign_light_group():
     return Response(status=200, headers=DEFAULT_HEADERS)
 
 
-@LIGHT_BLUEPRINT.route('/group/update', methods=['POST'])
+@LIGHT_BLUEPRINT.route('/group/light/update', methods=['POST'])
 def update_light_group():
     data = json.loads(request.data.decode('UTF-8'))
     light_service.update_group(data)
     return Response(status=200, headers=DEFAULT_HEADERS)
 
+# TODO: distinguish between switch/dimmer
 # TODO: get_all_light_groups needs to return unassigned lights too
 # TODO: how to kick off job and start task (celery uses a broker like redis/rabbitmq?)

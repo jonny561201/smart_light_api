@@ -1,4 +1,4 @@
-import time
+# import time
 
 from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
@@ -8,11 +8,13 @@ from svc.utils import tuya_utils
 
 
 def update_light_state(request):
-    switch_id = request.get('lightId')
+    light_id = request.get('lightId')
     brightness = request.get('brightness')
     on = request.get('on')
+    with LightDatabaseManager() as db:
+        light = db.get_light_by(light_id)
 
-    tuya_utils.set_switch(switch_id, on, brightness)
+        tuya_utils.set_switch(light, on, brightness)
 
 
 def create_group(request):
@@ -69,7 +71,7 @@ def get_unregistered_devices():
     devices = tuya_utils.scan_for_devices()
     with LightDatabaseManager() as db:
         registered_lights = db.get_all_lights()
-        registered_id = [light.device_id for light in registered_lights]
+        registered_id = [light.id for light in registered_lights]
         unregistered_devices = [device for device in devices if device.get('id') not in registered_id]
         db.insert_unregistered_devices(unregistered_devices)
         return unregistered_devices

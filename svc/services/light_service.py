@@ -11,6 +11,7 @@ def update_light_state(request):
     light_id = request.get('lightId')
     brightness = request.get('brightness')
     on = request.get('on')
+
     with LightDatabaseManager() as db:
         light = db.get_light_by(light_id)
 
@@ -19,6 +20,7 @@ def update_light_state(request):
 
 def create_group(request):
     name = request['name']
+
     with LightDatabaseManager() as db:
         return db.create_new_group(name)
 
@@ -29,23 +31,31 @@ def delete_group(group_id):
 
 
 def get_light_groups():
+    settings = Settings.get_instance()
+    if settings.dev_mode:
+        return TEST_LIGHTS
+
     with LightDatabaseManager() as db:
         device_groups = db.get_light_groups()
         return list(map(__map_group, device_groups))
 
 
 def assign_group(request):
-    unregistered_id = request.get('lightId')
+    name = request.get('name')
     group_id = request.get('groupId')
+    unregistered_id = request.get('lightId')
+    switch_type_id = request.get('switchTypeId')
+
     with LightDatabaseManager() as db:
         unregistered = db.get_unregistered_light_by(unregistered_id)
-        db.assign_new_light(unregistered, group_id)
+        db.assign_new_light(unregistered, group_id, name, switch_type_id)
         db.delete_unregistered_light_by(unregistered)
 
 
 def update_group(request):
     light_id = request.get('lightId')
     group_id = request.get('groupId')
+
     with LightDatabaseManager() as db:
         db.update_light_group(light_id, group_id)
 
@@ -69,6 +79,7 @@ def set_light_group(request):
 
 def get_unregistered_devices():
     devices = tuya_utils.scan_for_devices()
+
     with LightDatabaseManager() as db:
         registered_lights = db.get_all_lights()
         registered_id = [light.id for light in registered_lights]

@@ -61,8 +61,8 @@ class LightDatabase:
             self.session.merge(device)
         return new_devices
 
-    def assign_new_light(self, unregistered_light, group_id):
-        light = Devices(id=unregistered_light.id, name=unregistered_light.name, ip_address=unregistered_light.ip_address, local_key=unregistered_light.local_key, group_id=group_id, type_id=TuyaTypes.OUTLET)
+    def assign_new_light(self, unregistered_light, group_id, name, switch_type_id):
+        light = Devices(id=unregistered_light.id, name=name, ip_address=unregistered_light.ip_address, local_key=unregistered_light.local_key, group_id=group_id, type_id=TuyaTypes.OUTLET, switch_type_id=switch_type_id)
         self.session.add(light)
 
     def create_new_group(self, name):

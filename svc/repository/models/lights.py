@@ -13,6 +13,13 @@ class DeviceTypes(Base):
     name = Column(String, nullable=False)
 
 
+class SwitchTypes(Base):
+    __table__ = 'switch_types'
+
+    id = Column(UUID, nullable=False, primary_key=True)
+    name = Column(String, nullable=False)
+
+
 class DeviceGroups(Base):
     __tablename__ = 'device_groups'
 
@@ -31,9 +38,11 @@ class Devices(Base):
     local_key = Column(String, nullable=False)
     type_id = Column(UUID, ForeignKey(DeviceTypes.id))
     group_id = Column(UUID, ForeignKey(DeviceGroups.id))
+    switch_type_id = Column(UUID, ForeignKey(SwitchTypes.id))
 
     device_type = relationship('DeviceTypes', foreign_keys='Devices.type_id')
     device_group = relationship('DeviceGroups', foreign_keys='Devices.group_id')
+    switch_type = relationship('SwitchTypes', foreign_keys='Devices.switch_type_id')
 
 
 class UnregisteredDevices(Base):

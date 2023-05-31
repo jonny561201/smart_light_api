@@ -4,7 +4,7 @@ from flask import request, Response, Blueprint
 
 from svc.services import light_service
 
-LIGHT_BLUEPRINT = Blueprint('light_blueprint', __name__, url_prefix='/lights')
+LIGHT_BLUEPRINT = Blueprint('light_blueprint', __name__, url_prefix='/api/lights')
 DEFAULT_HEADERS = {'Content-Type': 'text/json'}
 
 

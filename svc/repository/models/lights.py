@@ -14,7 +14,7 @@ class DeviceTypes(Base):
 
 
 class SwitchTypes(Base):
-    __table__ = 'switch_types'
+    __tablename__ = 'switch_types'
 
     id = Column(UUID, nullable=False, primary_key=True)
     name = Column(String, nullable=False)
@@ -52,4 +52,3 @@ class UnregisteredDevices(Base):
     name = Column(String, nullable=False)
     ip_address = Column(INET, nullable=False)
     local_key = Column(String, nullable=False)
-

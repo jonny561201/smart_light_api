@@ -34,6 +34,10 @@ class Settings:
     def db_pass(self):
         return self.settings.get('dbPass') if self.dev_mode else os.environ.get('DB_PASS')
 
+    @property
+    def api_key(self):
+        return self.settings.get('apiKey') if self.dev_mode else os.environ.get('API_KEY')
+
     @staticmethod
     def get_instance():
         if Settings.__instance is None:

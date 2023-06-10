@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from svc.config.settings_state import Settings
 
@@ -10,6 +11,7 @@ class TestSettingsState:
     ENV_DB_PORT = '3322'
     ENV_DB_USER = 'OtherUserName'
     ENV_DB_PASS = 'other_pass'
+    ENV_API_KEY = str(uuid.uuid4())
 
     def setup_method(self):
         self.SETTINGS = Settings.get_instance()
@@ -17,7 +19,8 @@ class TestSettingsState:
                            'DB_NAME': self.ENV_DB_NAME,
                            'DB_PORT': self.ENV_DB_PORT,
                            'DB_USER': self.ENV_DB_USER,
-                           'DB_PASS': self.ENV_DB_PASS})
+                           'DB_PASS': self.ENV_DB_PASS,
+                           'API_KEY': self.ENV_API_KEY})
 
     def teardown_method(self):
         os.environ.pop('LIGHT_FILE')
@@ -25,6 +28,7 @@ class TestSettingsState:
         os.environ.pop('DB_PORT')
         os.environ.pop('DB_USER')
         os.environ.pop('DB_PASS')
+        os.environ.pop('API_KEY')
 
     def test_settings_state__should_return_light_file_from_file(self):
         test_file = 'test.json'
@@ -105,3 +109,19 @@ class TestSettingsState:
         actual = self.SETTINGS.db_pass
 
         assert actual == self.ENV_DB_PASS
+
+    def test_settings_state__should_return_api_key_from_file(self):
+        api_key = 'sample_pass'
+        self.SETTINGS.dev_mode = True
+        self.SETTINGS.settings = {'apiKey': api_key}
+
+        actual = self.SETTINGS.api_key
+
+        assert actual == api_key
+
+    def test_settings_state__should_return_api_keuy_from_env_vars(self):
+        self.SETTINGS.dev_mode = False
+
+        actual = self.SETTINGS.api_key
+
+        assert actual == self.ENV_API_KEY

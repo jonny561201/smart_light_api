@@ -15,10 +15,6 @@ class Settings:
             Settings.__instance.__get_settings()
 
     @property
-    def light_file(self):
-        return self.settings.get('lightFile') if self.dev_mode else os.environ.get('LIGHT_FILE')
-
-    @property
     def db_name(self):
         return self.settings.get('dbName') if self.dev_mode else os.environ.get('DB_NAME')
 

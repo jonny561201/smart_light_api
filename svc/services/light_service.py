@@ -1,13 +1,18 @@
 # import time
-
+from config.settings_state import Settings
 from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
+from utils.api_utils import is_valid
+from utils.lights import TEST_LIGHTS
+
+
 # from multiprocessing import cpu_count, Pool, freeze_support
 
 # from svc.utils.mapper_utils import map_moar_light
 
 
-def update_light_state(request):
+def update_light_state(api_key, request):
+    is_valid(api_key)
     light_id = request.get('lightId')
     brightness = request.get('brightness')
     on = request.get('on')
@@ -18,29 +23,33 @@ def update_light_state(request):
         tuya_utils.set_switch(light, on, brightness)
 
 
-def create_group(request):
+def create_group(api_key, request):
+    is_valid(api_key)
     name = request['name']
 
     with LightDatabaseManager() as db:
         return db.create_new_group(name)
 
 
-def delete_group(group_id):
+def delete_group(api_key, group_id):
+    is_valid(api_key)
     with LightDatabaseManager() as db:
         db.delete_group_by(group_id)
 
 
-def get_light_groups():
-    settings = Settings.get_instance()
-    if settings.dev_mode:
-        return TEST_LIGHTS
+def get_light_groups(api_key):
+    is_valid(api_key)
+    # settings = Settings.get_instance()
+    # if settings.dev_mode:
+    #     return TEST_LIGHTS
 
     with LightDatabaseManager() as db:
         device_groups = db.get_light_groups()
         return list(map(__map_group, device_groups))
 
 
-def assign_group(request):
+def assign_group(api_key, request):
+    is_valid(api_key)
     name = request.get('name')
     group_id = request.get('groupId')
     unregistered_id = request.get('lightId')
@@ -52,7 +61,8 @@ def assign_group(request):
         db.delete_unregistered_light_by(unregistered)
 
 
-def update_group(request):
+def update_group(api_key, request):
+    is_valid(api_key)
     light_id = request.get('lightId')
     group_id = request.get('groupId')
 
@@ -66,7 +76,8 @@ def update_group(request):
 #         return list(map(__map_moar_group, device_groups))
 
 
-def set_light_group(request):
+def set_light_group(api_key, request):
+    is_valid(api_key)
     on = request.get('on')
     brightness = request.get('brightness')
     group_id = request['groupId']
@@ -77,7 +88,8 @@ def set_light_group(request):
             tuya_utils.set_switch(light, on, brightness)
 
 
-def get_unregistered_devices():
+def get_unregistered_devices(api_key):
+    is_valid(api_key)
     devices = tuya_utils.scan_for_devices()
 
     with LightDatabaseManager() as db:

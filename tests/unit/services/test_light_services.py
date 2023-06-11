@@ -26,6 +26,11 @@ class TestLightServices:
 
         mock_db.return_value.__enter__.return_value.get_light_groups.assert_called()
 
+    def test_get_light_groups__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        get_light_groups(self.API_KEY)
+
+        mock_api.assert_called_with(self.API_KEY)
+
     def test_get_light_groups__should_map_db_response(self, mock_db, mock_tuya, mock_api):
         light = {'name': 'Lamp', 'id': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}
         expected = [{'groupName': 'Bedroom', 'groupId': self.GROUP_ID, 'lights': [light], 'on': True, 'brightness': 50}]
@@ -46,6 +51,12 @@ class TestLightServices:
         assert actual[0]['on'] is False
         assert actual[0]['brightness'] == 0
 
+    def test_update_light_state__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        request = {'lightId': self.DEVICE_ONE_ID}
+        update_light_state(self.API_KEY, request)
+
+        mock_api.assert_called_with(self.API_KEY)
+
     def test_update_light_state__should_call_db_for_light_by_id(self, mock_db, mock_tuya, mock_api):
         request = {'lightId': self.DEVICE_ONE_ID}
         update_light_state(self.API_KEY, request)
@@ -58,6 +69,13 @@ class TestLightServices:
         update_light_state(self.API_KEY, request)
 
         mock_tuya.set_switch.assert_called_with(self.DEVICE_ONE, request['on'], request['brightness'])
+
+    def test_set_light_groups__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        request = {'groupId': 'abc134', 'on': True}
+        mock_db.return_value.__enter__.return_value.get_lights_by.return_value = [self.DB_GROUP]
+        set_light_group(self.API_KEY, request)
+
+        mock_api.assert_called_with(self.API_KEY)
 
     def test_set_light_groups__should_get_groups_from_db(self, mock_db, mock_tuya, mock_api):
         request = {'groupId': 'abc134', 'on': True}
@@ -74,6 +92,13 @@ class TestLightServices:
 
         mock_tuya.set_switch.assert_any_call(self.DEVICE_ONE, request['on'], request['brightness'])
         mock_tuya.set_switch.assert_any_call(self.DEVICE_TWO, request['on'], request['brightness'])
+
+    def test_create_group__should_validate_api_call(self, mock_db, mock_tuya, mock_api):
+        request = {'name': 'test name'}
+
+        create_group(self.API_KEY, request)
+
+        mock_api.assert_called_with(self.API_KEY)
 
     def test_create_group__should_call_repository_with_name(self, mock_db, mock_tuya, mock_api):
         request = {'name': 'test name'}
@@ -97,6 +122,17 @@ class TestLightServices:
 
         mock_db.return_value.__enter__.return_value.delete_group_by.assert_called_with(group_id)
 
+    def test_delete_group__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        group_id = str(uuid.uuid4())
+        delete_group(self.API_KEY, group_id)
+
+        mock_api.assert_called_with(self.API_KEY)
+
+    def test_get_unregistered_devices__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        get_unregistered_devices(self.API_KEY)
+
+        mock_api.assert_called_with(self.API_KEY)
+
     def test_get_unregistered_devices__should_query_tuya_devices_scan(self, mock_db, mock_tuya, mock_api):
         get_unregistered_devices(self.API_KEY)
 
@@ -112,6 +148,13 @@ class TestLightServices:
         actual = get_unregistered_devices(self.API_KEY)
 
         assert actual == [expected_device]
+
+    def test_assign_group__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
+
+        assign_group(self.API_KEY, request)
+
+        mock_api.assert_called_with(self.API_KEY)
 
     def test_assign_group__should_get_unregistered_devices_by_id(self, mock_db, mock_tuya, mock_api):
         request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
@@ -137,6 +180,13 @@ class TestLightServices:
         assign_group(self.API_KEY, request)
 
         mock_db.return_value.__enter__.return_value.delete_unregistered_light_by.assert_called_with(device)
+
+    def test_update_group__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
+
+        update_group(self.API_KEY, request)
+
+        mock_api.assert_called_with(self.API_KEY)
 
     def test_update_group__should_call_to_update_light_group_with_request(self, mock_db, mock_tuya, mock_api):
         request = {'lightId': 1, 'groupId': str(uuid.uuid4())}

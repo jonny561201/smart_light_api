@@ -1,0 +1,13 @@
+[Unit]
+Description=Home Automation Smart Light API Service
+After=network.target
+
+[Service]
+EnvironmentFile=/home/pi/smart_light_api/serviceEnvVariables
+ExecStart=/home/pi/smart_light_api/venv/bin/uwsgi --ini /home/pi/smart_light_api/deployment/wsgi.ini
+WorkingDirectory=/home/pi/smart_light_api
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

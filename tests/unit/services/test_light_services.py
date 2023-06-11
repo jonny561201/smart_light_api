@@ -26,19 +26,6 @@ class TestLightServices:
 
         mock_db.return_value.__enter__.return_value.get_light_groups.assert_called()
 
-    def test_update_light_state__should_call_db_for_light_by_id(self, mock_db, mock_tuya, mock_api):
-        request = {'lightId': self.DEVICE_ONE_ID}
-        update_light_state(self.API_KEY, request)
-
-        mock_db.return_value.__enter__.return_value.get_light_by.assert_called_with(self.DEVICE_ONE_ID)
-
-    def test_update_light_state__should_set_tuya_switch(self, mock_db, mock_tuya, mock_api):
-        request = {'lightId': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}
-        mock_db.return_value.__enter__.return_value.get_light_by.return_value = self.DEVICE_ONE
-        update_light_state(self.API_KEY, request)
-
-        mock_tuya.set_switch.assert_called_with(self.DEVICE_ONE, request['on'], request['brightness'])
-
     def test_get_light_groups__should_map_db_response(self, mock_db, mock_tuya, mock_api):
         light = {'name': 'Lamp', 'id': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}
         expected = [{'groupName': 'Bedroom', 'groupId': self.GROUP_ID, 'lights': [light], 'on': True, 'brightness': 50}]
@@ -56,8 +43,21 @@ class TestLightServices:
 
         actual = get_light_groups(self.API_KEY)
 
-        assert actual[0]['on'] == False
+        assert actual[0]['on'] is False
         assert actual[0]['brightness'] == 0
+
+    def test_update_light_state__should_call_db_for_light_by_id(self, mock_db, mock_tuya, mock_api):
+        request = {'lightId': self.DEVICE_ONE_ID}
+        update_light_state(self.API_KEY, request)
+
+        mock_db.return_value.__enter__.return_value.get_light_by.assert_called_with(self.DEVICE_ONE_ID)
+
+    def test_update_light_state__should_set_tuya_switch(self, mock_db, mock_tuya, mock_api):
+        request = {'lightId': self.DEVICE_ONE_ID, 'on': True, 'brightness': 50}
+        mock_db.return_value.__enter__.return_value.get_light_by.return_value = self.DEVICE_ONE
+        update_light_state(self.API_KEY, request)
+
+        mock_tuya.set_switch.assert_called_with(self.DEVICE_ONE, request['on'], request['brightness'])
 
     def test_set_light_groups__should_get_groups_from_db(self, mock_db, mock_tuya, mock_api):
         request = {'groupId': 'abc134', 'on': True}

@@ -13,7 +13,10 @@ def map_light(light, status):
 
 
 def map_unregistered_light(light):
-    print('map!')
+    return {
+        'name': light.name,
+        'ipAddress': light.ip_address
+    }
 
 # def map_moar_light(light, status):
 #     return {

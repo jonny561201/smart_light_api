@@ -103,6 +103,9 @@ def scan_unregistered_devices(api_key):
 def get_unregistered_devices(api_key):
     is_valid(api_key)
 
+    with LightDatabaseManager() as db:
+        db.get_unregistered_lights()
+
 
 def __map_group(group):
     lights = list(map(__get_light_data, group.devices))

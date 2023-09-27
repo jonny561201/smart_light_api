@@ -154,6 +154,11 @@ class TestLightServices:
 
         mock_api.assert_called_with(self.API_KEY)
 
+    def test_get_unregistered_devices__should_return_devices_from_db(self, mock_db, mock_tuya, mock_api):
+        get_unregistered_devices(self.API_KEY)
+
+        mock_db.return_value.__enter__.return_value.get_unregistered_lights.assert_called()
+
     def test_assign_group__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
         request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
 

@@ -48,6 +48,9 @@ class LightDatabase:
     def get_unregistered_light_by(self, light_id):
         return self.session.query(UnregisteredDevices).filter_by(id=light_id).first()
 
+    def get_unregistered_lights(self):
+        print('unregistred lights!')
+
     def delete_unregistered_light_by(self, unregistered):
         self.session.delete(unregistered)
 

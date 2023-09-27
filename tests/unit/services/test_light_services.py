@@ -158,14 +158,14 @@ class TestLightServices:
     def test_get_unregistered_devices__should_query_devices_from_db(self, mock_db, mock_tuya, mock_api, mock_map):
         get_unregistered_devices(self.API_KEY)
 
-        mock_db.return_value.__enter__.return_value.get_unregistered_lights.assert_called()
+        mock_db.return_value.__enter__.return_value.get_all_unregistered_lights.assert_called()
 
     def test_get_unregistered_devices__should_return_devices_from_db(self, mock_db, mock_tuya, mock_api, mock_map):
         devices = [UnregisteredDevices(name='test')]
         map_device = {'name': 'Test Name', 'ipAddress': '0.0.0.0'}
 
         mock_map.return_value = map_device
-        mock_db.return_value.__enter__.return_value.get_unregistered_lights.return_value = devices
+        mock_db.return_value.__enter__.return_value.get_all_unregistered_lights.return_value = devices
 
         actual = get_unregistered_devices(self.API_KEY)
 

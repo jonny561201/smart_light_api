@@ -62,6 +62,17 @@ class TestDbIntegration:
             actual = db.get_unregistered_light_by(id)
             assert actual.id == id
 
+    def test_get_all_unregistered_lights__should_return_records(self):
+        id = str(uuid.uuid4())
+        unregistered = UnregisteredDevices(id=id, name='test', ip_address='192.1.1.1', local_key='key test')
+
+        with LightDatabaseManager() as db:
+            db.session.add(unregistered)
+
+        with LightDatabaseManager() as db:
+            actual = db.get_all_unregistered_lights()
+            assert actual[0].id == id
+
     def test_get_lights_by_group_id__should_return_records_from_database(self):
         with LightDatabaseManager() as db:
             actual = db.get_lights_by(self.GROUP_TWO_ID)

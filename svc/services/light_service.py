@@ -100,6 +100,10 @@ def scan_unregistered_devices(api_key):
         return unregistered_devices
 
 
+def get_unregistered_devices(api_key):
+    print('placeholder!')
+
+
 def __map_group(group):
     lights = list(map(__get_light_data, group.devices))
     has_lights = len(lights) > 0

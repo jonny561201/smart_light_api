@@ -95,3 +95,14 @@ class TestLightRoutes:
         actual = self.TEST_CLIENT.get('/api/lights/scan')
 
         assert actual.status_code == 200
+
+    def test_get_unregistered_devices__should_call_service(self, mock_service):
+        self.TEST_CLIENT.get('/api/lights/unregistered', headers={'LightApiKey': self.API_KEY})
+
+        mock_service.get_unregistered_devices.assert_called_with(self.API_KEY)
+
+    def test_get_unregistered_devices__should_return_success(self, mock_service):
+        mock_service.get_unregistered_devices.return_value = {}
+        actual = self.TEST_CLIENT.get('/api/lights/unregistered')
+
+        assert actual.status_code == 200

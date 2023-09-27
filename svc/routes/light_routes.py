@@ -56,6 +56,13 @@ def scan_unregistered_devices():
     return Response(json.dumps(content), status=200, headers=DEFAULT_HEADERS)
 
 
+@LIGHT_BLUEPRINT.route('/unregistered', methods=['GET'])
+def get_unregistered_devices():
+    api_key = request.headers.get('LightApiKey')
+    content = light_service.get_unregistered_devices(api_key)
+    return Response(json.dumps(content), status=200, headers=DEFAULT_HEADERS)
+
+
 @LIGHT_BLUEPRINT.route('/group/assign', methods=['POST'])
 def assign_light_group():
     api_key = request.headers.get('LightApiKey')

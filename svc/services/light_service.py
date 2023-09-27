@@ -101,7 +101,7 @@ def scan_unregistered_devices(api_key):
 
 
 def get_unregistered_devices(api_key):
-    print('placeholder!')
+    is_valid(api_key)
 
 
 def __map_group(group):

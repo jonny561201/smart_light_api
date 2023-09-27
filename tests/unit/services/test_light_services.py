@@ -4,7 +4,7 @@ from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group, \
-    scan_unregistered_devices, assign_group, update_group, update_light_state
+    scan_unregistered_devices, assign_group, update_group, update_light_state, get_unregistered_devices
 
 
 @patch('svc.services.light_service.is_valid')
@@ -148,6 +148,11 @@ class TestLightServices:
         actual = scan_unregistered_devices(self.API_KEY)
 
         assert actual == [expected_device]
+
+    def test_get_unregistered_devices__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        get_unregistered_devices(self.API_KEY)
+
+        mock_api.assert_called_with(self.API_KEY)
 
     def test_assign_group__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
         request = {'lightId': 1, 'groupId': str(uuid.uuid4())}

@@ -106,7 +106,7 @@ def get_unregistered_devices(api_key):
     is_valid(api_key)
 
     with LightDatabaseManager() as db:
-        unregistered_lights = db.get_unregistered_lights()
+        unregistered_lights = db.get_all_unregistered_lights()
         return [map_unregistered_light(light) for light in unregistered_lights]
 
 

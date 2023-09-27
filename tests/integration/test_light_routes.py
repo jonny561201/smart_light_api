@@ -84,3 +84,14 @@ class TestLightRoutes:
         self.TEST_CLIENT.post('/api/lights/group/update', data=json.dumps(request), headers={'LightApiKey': self.API_KEY})
 
         mock_service.update_group.assert_called_with(self.API_KEY, request)
+
+    def test_scan_unregistered_devices__should_call_service(self, mock_service):
+        self.TEST_CLIENT.get('/api/lights/scan', headers={'LightApiKey': self.API_KEY})
+
+        mock_service.scan_unregistered_devices.assert_called_with(self.API_KEY)
+
+    def test_scan_unregistered_devices__should_return_success(self, mock_service):
+        mock_service.scan_unregistered_devices.return_value = {}
+        actual = self.TEST_CLIENT.get('/api/lights/scan')
+
+        assert actual.status_code == 200

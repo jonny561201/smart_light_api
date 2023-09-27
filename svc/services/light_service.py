@@ -4,6 +4,7 @@ from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
 from utils.api_utils import is_valid
 from utils.lights import TEST_LIGHTS
+from utils.mapper_utils import map_unregistered_light
 
 
 # from multiprocessing import cpu_count, Pool, freeze_support
@@ -33,6 +34,7 @@ def create_group(api_key, request):
 
 def delete_group(api_key, group_id):
     is_valid(api_key)
+
     with LightDatabaseManager() as db:
         db.delete_group_by(group_id)
 
@@ -104,7 +106,8 @@ def get_unregistered_devices(api_key):
     is_valid(api_key)
 
     with LightDatabaseManager() as db:
-        db.get_unregistered_lights()
+        unregistered_lights = db.get_unregistered_lights()
+        return [map_unregistered_light(light) for light in unregistered_lights]
 
 
 def __map_group(group):

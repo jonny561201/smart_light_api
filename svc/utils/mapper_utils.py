@@ -11,6 +11,10 @@ def map_light(light, status):
         'brightness': status.get(DeviceStates.BRIGHTNESS) if currently_on else 0
     }
 
+
+def map_unregistered_light(light):
+    print('map!')
+
 # def map_moar_light(light, status):
 #     return {
 #         'lightName': light['name'],

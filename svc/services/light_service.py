@@ -88,7 +88,7 @@ def set_light_group(api_key, request):
             tuya_utils.set_switch(light, on, brightness)
 
 
-def get_unregistered_devices(api_key):
+def scan_unregistered_devices(api_key):
     is_valid(api_key)
     devices = tuya_utils.scan_for_devices()
 

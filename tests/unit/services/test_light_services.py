@@ -4,7 +4,7 @@ from mock import patch
 
 from svc.repository.models.lights import DeviceGroups, Devices, UnregisteredDevices
 from svc.services.light_service import get_light_groups, set_light_group, create_group, delete_group, \
-    get_unregistered_devices, assign_group, update_group, update_light_state
+    scan_unregistered_devices, assign_group, update_group, update_light_state
 
 
 @patch('svc.services.light_service.is_valid')
@@ -128,24 +128,24 @@ class TestLightServices:
 
         mock_api.assert_called_with(self.API_KEY)
 
-    def test_get_unregistered_devices__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
-        get_unregistered_devices(self.API_KEY)
+    def test_scan_unregistered_devices__should_validate_api_key(self, mock_db, mock_tuya, mock_api):
+        scan_unregistered_devices(self.API_KEY)
 
         mock_api.assert_called_with(self.API_KEY)
 
-    def test_get_unregistered_devices__should_query_tuya_devices_scan(self, mock_db, mock_tuya, mock_api):
-        get_unregistered_devices(self.API_KEY)
+    def test_scan_unregistered_devices__should_query_tuya_devices_scan(self, mock_db, mock_tuya, mock_api):
+        scan_unregistered_devices(self.API_KEY)
 
         mock_tuya.scan_for_devices.assert_called()
 
-    def test_get_unregistered_devices__should_compare_devices_from_scan_and_database(self, mock_db, mock_tuya, mock_api):
+    def test_scan_unregistered_devices__should_compare_devices_from_scan_and_database(self, mock_db, mock_tuya, mock_api):
         device_id = '1234'
         expected_device = {'id': '234235'}
         mock_tuya.scan_for_devices.return_value = [{'id': device_id}, expected_device]
         device_one = Devices(id=device_id)
         mock_db.return_value.__enter__.return_value.get_all_lights.return_value = [device_one]
 
-        actual = get_unregistered_devices(self.API_KEY)
+        actual = scan_unregistered_devices(self.API_KEY)
 
         assert actual == [expected_device]
 
@@ -156,7 +156,7 @@ class TestLightServices:
 
         mock_api.assert_called_with(self.API_KEY)
 
-    def test_assign_group__should_get_unregistered_devices_by_id(self, mock_db, mock_tuya, mock_api):
+    def test_assign_group__should_scan_unregistered_devices_by_id(self, mock_db, mock_tuya, mock_api):
         request = {'lightId': 1, 'groupId': str(uuid.uuid4())}
 
         assign_group(self.API_KEY, request)

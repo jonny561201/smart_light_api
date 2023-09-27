@@ -49,10 +49,10 @@ def delete_group_by_id(group_id):
     return Response(status=200, headers=DEFAULT_HEADERS)
 
 
-@LIGHT_BLUEPRINT.route('/unregistered', methods=['GET'])
-def get_unregistered_lights():
+@LIGHT_BLUEPRINT.route('/scan', methods=['GET'])
+def scan_unregistered_devices():
     api_key = request.headers.get('LightApiKey')
-    content = light_service.get_unregistered_devices(api_key)
+    content = light_service.scan_unregistered_devices(api_key)
     return Response(json.dumps(content), status=200, headers=DEFAULT_HEADERS)
 
 

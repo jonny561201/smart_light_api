@@ -8,6 +8,11 @@ LIGHT_BLUEPRINT = Blueprint('light_blueprint', __name__, url_prefix='/api/lights
 DEFAULT_HEADERS = {'Content-Type': 'text/json'}
 
 
+@LIGHT_BLUEPRINT.route('/health', methods=['GET'])
+def get_health():
+    return 'success'
+
+
 @LIGHT_BLUEPRINT.route('/light/state', methods=['POST'])
 def set_light_state():
     api_key = request.headers.get('LightApiKey')

@@ -1,10 +1,10 @@
 # import time
-from config.settings_state import Settings
+# from config.settings_state import Settings
 from svc.repository.light_repository import LightDatabaseManager
 from svc.utils import tuya_utils
-from utils.api_utils import is_valid
-from utils.lights import TEST_LIGHTS
-from utils.mapper_utils import map_unregistered_light
+from svc.utils.api_utils import is_valid
+# from utils.lights import TEST_LIGHTS
+from svc.utils.mapper_utils import map_unregistered_light
 
 
 # from multiprocessing import cpu_count, Pool, freeze_support

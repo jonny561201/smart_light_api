@@ -56,7 +56,7 @@ function configureSystemD {
 
 function migrateDatabase {
     echo  -e "${YELLOW}---------------Migrating Database---------------${WHITE}"
-    python3 -m yoyo apply -b --database postgresql://${DB_USER}:${DB_PASS}@localhost:${DB_PORT}/${DB_NAME} ./sql/migration/
+    python3 -m yoyo apply -b --database postgresql://${DB_USER}:${DB_PASS}@localhost:${DB_PORT}/${DB_NAME} ./sql/migrations/
 }
 
 function restartDevice {
